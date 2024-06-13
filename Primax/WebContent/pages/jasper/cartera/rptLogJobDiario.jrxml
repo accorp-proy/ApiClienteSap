@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptLogJobDiario" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d04bc4bf-cade-4853-bd85-b050e256df9a">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="47"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="par_fecha_desde" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="par_fecha_hasta" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="par_usuario" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="logo" class="java.io.InputStream">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select
+logs.id_log_job_diario as idlogJobDiario,
+logs.fecha_registro as fechaRegistro,
+logs.estado_inicio_ejecucion_job as estadoInicio,
+logs.estado_fin_ejecucion_job as estadoFin,
+logs.fecha_inicio as fechaInicio,
+logs.fecha_fin as fechaFin,
+logs.nombre_job as nombre,
+(CASE when logs.estado_fin_ejecucion_job is null then
+(SELECT  EXTRACT(minute FROM age(timestamp 'now()',date(logs.fecha_inicio)))) end ) as minutos
+from log_job_diario_et logs
+where (date_trunc('day',logs.fecha_registro)  between $P{par_fecha_desde} and $P{par_fecha_hasta})
+
+union
+
+select
+logs.id_log_job as idLogJob,
+logs.fecha_registro as fechaRegistro,
+logs.estado_inicio_ejecucion_job as estadoInicio,
+logs.estado_fin_ejecucion_job as estadoFin,
+logs.fecha_inicio as fechaInicio,
+logs.fecha_fin as fechaFin,
+logs.nombre_job as nombre,
+(CASE when logs.estado_fin_ejecucion_job is null then
+(SELECT  EXTRACT(minute FROM age(timestamp 'now()',date(logs.fecha_inicio)))) end ) as minutos
+from log_job_et logs
+where (date_trunc('day',logs.fecha_registro) between $P{par_fecha_desde} and $P{par_fecha_hasta})
+order by fechaRegistro;
+
+ ]]>
+	</queryString>
+	<field name="idlogjobdiario" class="java.lang.Long"/>
+	<field name="fecharegistro" class="java.sql.Timestamp"/>
+	<field name="estadoinicio" class="java.lang.String"/>
+	<field name="estadofin" class="java.lang.String"/>
+	<field name="fechainicio" class="java.sql.Timestamp"/>
+	<field name="fechafin" class="java.sql.Timestamp"/>
+	<field name="nombre" class="java.lang.String"/>
+	<field name="minutos" class="java.lang.Double"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="58" splitType="Stretch">
+			<staticText>
+				<reportElement x="72" y="25" width="373" height="15" uuid="3ab31a86-2d9a-47ab-a27a-6f0668111f96"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[HISTORIAL LOG JOBS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="161" y="40" width="64" height="15" uuid="c812cd29-e121-4558-aee2-11d9ce4b3601"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha Desde :]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="225" y="40" width="50" height="15" uuid="0a02c442-6ed0-4329-953f-54c1704d58c4"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{par_fecha_desde}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="275" y="40" width="53" height="15" uuid="dd7657c7-7192-4dee-b5bf-d7c46404f579"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha Hasta :]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="328" y="40" width="72" height="15" uuid="c806e706-9e26-465f-9f20-9f19e1eab18a"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{par_fecha_hasta}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="0" y="0" width="72" height="40" uuid="b83d1ae0-14fa-4d08-ac6f-4dee326ab871"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="484" y="10" width="27" height="10" uuid="8453a166-39ec-44a6-ac82-27d1eb4f541d"/>
+				<textElement verticalAlignment="Middle">
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[Impresión :]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy HH:mm" isBlankWhenNull="false">
+				<reportElement x="511" y="10" width="44" height="10" isPrintWhenDetailOverflows="true" uuid="8c8b1d5b-d887-4bc4-8974-9c583b71a417"/>
+				<textElement verticalAlignment="Middle">
+					<font size="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="484" y="0" width="27" height="10" uuid="99d6f16e-9424-40eb-809e-167a8b497566"/>
+				<textElement verticalAlignment="Middle">
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[Usuario :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="484" y="20" width="27" height="10" uuid="918d7221-f648-4327-b4e3-18333d971730"/>
+				<textElement verticalAlignment="Middle">
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[Página :]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="511" y="0" width="44" height="10" uuid="8d61daac-c306-44a7-89da-eeb7d4f571a0"/>
+				<textElement verticalAlignment="Middle">
+					<font size="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{par_usuario}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="511" y="20" width="12" height="10" uuid="9fbc5bb7-3965-4a9b-8d7d-8281727ea615"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[+$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="523" y="20" width="21" height="10" uuid="ac9bda38-844e-48f3-a6db-a537d6989950"/>
+				<textElement verticalAlignment="Middle">
+					<font size="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA["/" + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="15" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="36" height="15" backcolor="#FF6600" uuid="135dcb27-31fc-472d-80be-04f5d00f2b74"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Código]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="36" y="0" width="80" height="15" backcolor="#FF6600" uuid="3e789699-e916-4e1b-90de-62b1a8c3f064"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha Ingreso]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="116" y="0" width="64" height="15" backcolor="#FF6600" uuid="8e432dab-a997-4c2e-9fcb-f3f4a4b79ae3"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Estado Inicio]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="180" y="0" width="45" height="15" backcolor="#FF6600" uuid="d5763318-e04f-47fe-bfb8-b4c15e5d38a6"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Estado Fin]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="225" y="0" width="85" height="15" backcolor="#FF6600" uuid="edfb6f36-2911-4478-a31a-07c584b6c65d"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha Inicio ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="310" y="0" width="90" height="15" backcolor="#FF6600" uuid="848cfdc7-6727-4cac-9e4b-bf251ed2600f"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha Fin ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="484" y="0" width="71" height="15" backcolor="#FF6600" uuid="4da67cf1-beba-4fb8-b7bc-b6b3a9b501cb"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ Minutos Ejecu..]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="400" y="0" width="84" height="15" backcolor="#FF6600" uuid="7b13674a-3461-4896-b995-683d75608cfb"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nombre Job]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="36" height="15" uuid="f014c118-99e9-4c3b-af97-809ac4bc5644"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{idlogjobdiario}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy HH.mm" isBlankWhenNull="true">
+				<reportElement x="36" y="0" width="80" height="15" uuid="e406d9d4-f4d8-4d9b-a1c3-101c22ca4ca2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fecharegistro}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy HH.mm.ss" isBlankWhenNull="true">
+				<reportElement x="116" y="0" width="64" height="15" uuid="3a17c03a-09ed-4f0e-a078-71e556d1063f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{estadoinicio}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy HH.mm.ss" isBlankWhenNull="true">
+				<reportElement x="180" y="0" width="45" height="15" uuid="8d181350-a780-487d-bb1d-e6f099b90062"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{estadofin}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy HH.mm.ss" isBlankWhenNull="true">
+				<reportElement x="225" y="0" width="85" height="15" uuid="eb1a7e80-e72c-4d82-b803-4f2d8c222af3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fechainicio}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy HH.mm.ss" isBlankWhenNull="true">
+				<reportElement x="310" y="0" width="90" height="15" uuid="5af24cb3-43a3-460a-ae19-217e50f2d51c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fechafin}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0" isBlankWhenNull="true">
+				<reportElement x="484" y="0" width="71" height="15" uuid="1d8f53f9-9b20-429b-b7cf-75f31978b01a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{minutos}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="400" y="0" width="84" height="15" uuid="d7886a3b-a938-4e66-ae07-ccc9553918bb"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="/WEB-INF/template.xhtml">
+	<ui:define name="content">
+		<h:form id="frm_car_044">
+			<p:growl autoUpdate="false" id="msg"></p:growl>
+			<p:toolbar>
+				<f:facet name="left">
+					<p:outputLabel value="Consulta Estado Cierre "></p:outputLabel>
+					<p:outputLabel value="car_044.xhtml"
+						rendered="#{appMain.usuario.idUsuario eq 1}"></p:outputLabel>
+					<span class="ui-separator"> <span
+						class="ui-icon ui-icon-grip-dotted-vertical" />
+					</span>
+				</f:facet>
+				<f:facet name="right">
+					<p:commandButton icon="ui-icon-border-clear"
+						oncomplete="PF('dlg_car_045').show()" title="Ejecutar Cierre"
+						update=":frm_car_045"></p:commandButton>
+				</f:facet>
+			</p:toolbar>
+			<div class="ui-g ui-fluid">
+				<div class="ui-g-12 ui-lg-12">
+					<div class="card">
+						<p:panelGrid columns="3" layout="grid" style="width:100%"
+							styleClass="ui-panelgrid-blank form-group"
+							columnClasses="ui-grid-col-2,ui-grid-col-2,ui-grid-col-8">
+							<h:panelGroup styleClass="md-inputfield">
+								<p:calendar placeholder="Fecha Corte" pattern="dd-MM-yyyy"
+									value="#{estadoCuentaCierreBn.fechaCorteBusqueda}"></p:calendar>
+							</h:panelGroup>
+							<p:commandButton title="Buscar"
+								update="frm_car_044,dtbEstadoCuenta" icon="fa fa-refresh"
+								styleClass="secondary" action="#{estadoCuentaCierreBn.buscar()}"></p:commandButton>
+						</p:panelGrid>
+					</div>
+				</div>
+			</div>
+			<p:dataTable id="dtbEstadoCuenta" paginator="true" rows="6"
+				tableStyle="table-layout:auto" paginatorPosition="bottom"
+				style="margin-bottom:10px" reflow="true"
+				value="#{estadoCuentaCierreBn.estadosCuentaCierre}"
+				emptyMessage="Registro no encontrado" var="estadoCuenta"
+				rowKey="#{estadoCuenta.idEstadoCuentaCierre}">
+				<f:facet name="header">
+					<h:outputText value="Estado Cuenta Cierre" />
+				</f:facet>
+				<p:column headerText="Empresa">
+					<h:outputText value="#{estadoCuenta.empresa.descripcion}">
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Fecha Ejecución">
+					<h:outputText value="#{estadoCuenta.fechaEjecucion}">
+						<f:convertDateTime pattern="dd-MM-yyyy  HH:mm:ss" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Fecha Fin Ejecución">
+					<h:outputText value="#{estadoCuenta.fechaFinEjecucion}">
+						<f:convertDateTime pattern="dd-MM-yyyy  HH:mm:ss" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Fecha Corte">
+					<h:outputText value="#{estadoCuenta.fechaCorte}">
+						<f:convertDateTime pattern="dd-MM-yyyy" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Cliente Consultado">
+					<h:outputText value="#{estadoCuenta.numeroClienteC}" />
+				</p:column>
+				<p:column headerText="Cliente Procesado">
+					<h:outputText value="#{estadoCuenta.numeroClienteP}" />
+				</p:column>
+				<p:column headerText="Acción" style="width:60px">
+					<div align="center">
+						<p:commandButton icon="ui-icon-update" styleClass="secondary"
+							action="#{estadoCuentaCierreBn.modificar(estadoCuenta)}"
+							title="Editar" onclick="PF('dlg_conf_1').show()"></p:commandButton>
+					</div>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+		<ui:include src="/pages/cartera/car_045.xhtml" />
+		<p:confirmDialog widgetVar="dlg_conf_1" header="Confirmar"
+			appendTo="@(body)"
+			message="Esta seguro de procesar estados comparativo diferentes de OK"
+			severity="alert" closeOnEscape="true" showEffect="fade"
+			hideEffect="fade">
+			<div align="center">
+				<p:commandButton styleClass="ui-confirmdialog-no"
+					icon="ui-icon-close" value="Cancelar" immediate="true"
+					oncomplete="PF('dlg_conf_1').hide()"></p:commandButton>
+				<p:commandButton value="Aceptar" styleClass="ui-confirmdialog-yes"
+					immediate="true" icon="ui-icon-check"
+					oncomplete="PF('dlg_conf_1').hide()"
+					action="#{estadoCuentaCierreBn.generar1()}" process="@this"></p:commandButton>
+			</div>
+		</p:confirmDialog>
+	</ui:define>
+
+</ui:composition>

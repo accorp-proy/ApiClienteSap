@@ -1,0 +1,86 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+	<ui:define name="content">
+		<h:form id="frm_car_rpt_004">
+
+			<p:fieldset legend="Filtros de búsqueda" toggleable="true"
+				toggleSpeed="500">
+				<div class="ui-g ui-fluid">
+					<div class="ui-g-12 ui-lg-12">
+						<div class="card">
+							<p:panelGrid columns="4" layout="grid" style="width:100%"
+								styleClass="ui-panelgrid-blank form-group">
+								<h:panelGroup>
+									<p:selectOneMenu converter="#{empresaConverter}"
+										value="#{BusquedaBn.empresaSeleccionada}">
+										<f:selectItem itemLabel="Empresa" />
+										<f:selectItems value="#{BusquedaBn.empresas}" var="empresa"
+											itemLabel="#{empresa.descripcion}" itemValue="#{empresa}"></f:selectItems>
+										<p:ajax process="@this"
+											update=":frm_car_rpt_004:selectOneProductoCartera"
+											event="change"></p:ajax>
+									</p:selectOneMenu>
+								</h:panelGroup>
+								<h:panelGroup>
+									<p:selectOneMenu id="selectOneProductoCartera"
+										value="#{BusquedaBn.productoCarteraCobranzaSeleccionado}"
+										converter="#{productoCarteraCobranzaConverter}">
+										<f:selectItem itemLabel="Línea Negocio" />
+										<f:selectItems
+											value="#{BusquedaBn.listProductoCarteraCobranza}"
+											var="productoCarteraCobranza"
+											itemLabel="#{productoCarteraCobranza.descripcion}"
+											itemValue="#{productoCarteraCobranza}">
+										</f:selectItems>
+									</p:selectOneMenu>
+								</h:panelGroup>
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="inpNombreEjecutivo" readonly="true"
+										style="width:80%"
+										value="#{BusquedaBn.vendedorSeleccionado.persona.nombreCompleto}"></p:inputText>
+									<p:commandButton icon="ui-icon-search"
+										title="Buscar Ejecutivo Comercial" update=":frm_car_024"
+										oncomplete="PF('dlg_car_024').show()"></p:commandButton>
+									<label>Ejecutivo Comercial</label>
+								</h:panelGroup>
+							</p:panelGrid>
+							<p:panelGrid columns="4" layout="grid" style="width:100%"
+								styleClass="ui-panelgrid-blank form-group">
+								<h:panelGroup styleClass="md-inputfield">
+									<p:calendar value="#{BusquedaBn.fechaSeleccionadaDesde}"
+										pattern="dd-MM-yyyy" showOn="button">
+										<p:ajax event="dateSelect" process="@this"></p:ajax>
+									</p:calendar>
+									<label>Fecha desde</label>
+								</h:panelGroup>
+								<h:panelGroup styleClass="md-inputfield">
+									<p:calendar value="#{BusquedaBn.fechaSeleccionadaHasta}"
+										pattern="dd-MM-yyyy" showOn="button">
+										<p:ajax event="dateSelect" process="@this"></p:ajax>
+									</p:calendar>
+									<label>Fecha hasta</label>
+								</h:panelGroup>
+								<div align="right">
+									<p:commandButton icon="ui-icon-picture-as-pdf" update="pnl_rep"
+										process="@this " ajax="false" immediate="true"
+										action="#{ReporteBn.imprimirPdf()}"></p:commandButton>
+								</div>
+							</p:panelGrid>
+						</div>
+					</div>
+				</div>
+				<p:panelGrid id="pnl_rep" styleClass="sinborde" style="width:100%">
+					<p:column>
+						<iframe height="480px" width="100%"
+							src="#{request.contextPath}/reporte?rptid=4&amp;p1=#{appMain.usuario.idUsuario.toString()}&amp;p2=#{BusquedaBn.fechaDesdeTexto}&amp;p3=#{BusquedaBn.fechaHastaTexto}&amp;p4=#{BusquedaBn.vendedorSeleccionado.idVendedor}"></iframe>
+					</p:column>
+				</p:panelGrid>
+			</p:fieldset>
+		</h:form>
+		<ui:include src="/pages/cartera/car_024.xhtml" />
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+	<p:dialog widgetVar="dialog_002" id="dialog_002" resizable="false"
+		modal="true" hideEffect="drop" closeOnEscape="true">
+		<f:facet name="header">
+			<h:outputText value="Ingreso/Modificación [lam_002_1]" />
+		</f:facet>
+		<h:form id="frm_tam_002_1">
+			<p:messages id="msgs" showDetail="true" />
+			<div class="ui-g ui-fluid">
+				<div class="ui-g-12 ui-lg-12">
+					<div class="card card-w-title">
+						<h2>Datos de Generación</h2>
+						<p:panelGrid columns="1" layout="grid"
+							styleClass="ui-panelgrid-blank form-group">
+							<h:panelGroup id="saldoMillas">
+								<label style="font-size: 16px; color: blue">Saldo en
+									Millas
+									[#{licenciaCabeceraMillaConsumoBn.licenciaSeleccionada.saldoMillas}]</label>
+							</h:panelGroup>
+							<h:panelGroup>
+								<p:selectOneMenu
+									value="#{licenciaCabeceraMillaConsumoBn.licenciaSeleccionada}"
+									converter="#{licenciaConverter}" filter="true">
+									<f:selectItems
+										value="#{licenciaCabeceraMillaConsumoBn.listaLicencia}"
+										var="lic" itemLabel="#{lic.licencia}" itemValue="#{lic}" />
+									<p:ajax event="change" process="@this" update="saldoMillas"></p:ajax>
+								</p:selectOneMenu>
+							</h:panelGroup>
+							<h:panelGroup styleClass="md-inputfield">
+								<p:inputText
+									value="#{licenciaCabeceraMillaConsumoBn.cabeceraLicenciaMillaConsumoSeleccionada.codigoProducto}" />
+								<label>Código de Producto</label>
+							</h:panelGroup>
+							<h:panelGroup styleClass="md-inputfield">
+								<p:inputNumber
+									value="#{licenciaCabeceraMillaConsumoBn.cabeceraLicenciaMillaConsumoSeleccionada.cantidad}"
+									decimalPlaces="0" />
+								<label>Cantidad a Generar</label>
+							</h:panelGroup>
+							<h:panelGroup styleClass="md-inputfield">
+								<p:inputNumber
+									value="#{licenciaCabeceraMillaConsumoBn.cabeceraLicenciaMillaConsumoSeleccionada.millas}"
+									decimalPlaces="2" />
+								<label>Millas</label>
+							</h:panelGroup>
+							<h:panelGroup styleClass="md-inputfield">
+								<p:inputNumber
+									value="#{licenciaCabeceraMillaConsumoBn.cabeceraLicenciaMillaConsumoSeleccionada.consumo}"
+									decimalPlaces="2" />
+								<label>Consumo</label>
+							</h:panelGroup>
+						</p:panelGrid>
+					</div>
+				</div>
+			</div>
+			<div align="center">
+				<p:commandButton title="Generar" value="Generar" icon="fa fa-cogs"
+					process="frm_tam_002_1"
+					action="#{licenciaCabeceraMillaConsumoBn.generarCabecera()}"
+					update=":frm_tam_002"></p:commandButton>
+			</div>
+		</h:form>
+	</p:dialog>
+</ui:composition>

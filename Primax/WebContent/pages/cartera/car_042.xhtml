@@ -1,0 +1,198 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="/WEB-INF/template.xhtml">
+	<ui:define name="content">
+		<h:form id="frm_car_042">
+			<p:growl autoUpdate="false" id="msg"></p:growl>
+			<p:toolbar>
+				<f:facet name="left">
+					<p:outputLabel value="Estadistico Factura Consumo"></p:outputLabel>
+					<span class="ui-separator"> <span
+						class="ui-icon ui-icon-grip-dotted-vertical" />
+					</span>
+				</f:facet>
+				<f:facet name="right">
+					<p:commandButton title="Visializar Datos" value="Vizualizar"
+						update="frm_car_042"
+						action="#{estadisticoFacturaConsumoBn.buscar()}"
+						icon="fa fa-bar-chart" styleClass="secondary"></p:commandButton>
+				</f:facet>
+			</p:toolbar>
+			<div class="ui-g ui-fluid">
+				<div class="ui-g-12 ui-lg-12">
+					<div class="card">
+						<p:panelGrid columns="4" layout="grid" style="width:100%"
+							styleClass="ui-panelgrid-blank form-group">
+							<h:panelGroup styleClass="md-inputfield">
+								<p:inputText id="inpNombreCliente" readonly="true"
+									style="width:80%"
+									value="#{estadisticoFacturaConsumoBn.clienteSeleccionado.persona.nombreCompleto}"></p:inputText>
+								<p:commandButton icon="ui-icon-search" update=":frm_car_032"
+									oncomplete="PF('dlg_car_043').show()" title="Buscar Cliente"></p:commandButton>
+								<label>Cliente</label>
+							</h:panelGroup>
+							<h:panelGroup styleClass="md-inputfield">
+								<p:calendar value="#{estadisticoFacturaConsumoBn.fechaDesde}"
+									pattern="dd-MM-yyyy" showOn="button">
+									<p:ajax event="dateSelect" process="@this"></p:ajax>
+								</p:calendar>
+								<label>Fecha desde</label>
+							</h:panelGroup>
+							<h:panelGroup styleClass="md-inputfield">
+								<p:calendar value="#{estadisticoFacturaConsumoBn.fechaHasta}"
+									pattern="dd-MM-yyyy" showOn="button">
+									<p:ajax event="dateSelect" process="@this"></p:ajax>
+								</p:calendar>
+								<label>Fecha hasta</label>
+							</h:panelGroup>
+							<h:panelGroup>
+								<p:selectOneMenu
+									value="#{estadisticoFacturaConsumoBn.facturado}">
+									<f:selectItem itemLabel="Facturados" itemValue="0" />
+									<f:selectItem itemLabel="No Facturados" itemValue="1" />
+									<p:ajax event="valueChange" process="@this"
+										update="frm_car_042" />
+								</p:selectOneMenu>
+							</h:panelGroup>
+						</p:panelGrid>
+					</div>
+				</div>
+				<div class="ui-g-12 ui-lg-12">
+					<div class="ui-g-12 ui-lg-12"
+						style="display: #{estadisticoFacturaConsumoBn.facturado eq 0 ? 'block' : 'none'}">
+						<div class="card card-w-title">
+							<p:dataTable id="dtbFactura" scrollable="true" scrollHeight="250"
+								value="#{estadisticoFacturaConsumoBn.comparativo}" filteredValue="#{estadisticoFacturaConsumoBn.comparativoFilter}"
+								emptyMessage="Registros no encontrados" var="com" rowKey="#{com.id}">
+								<f:facet name="header">
+						                      Comparativo por Estación							
+					            			</f:facet>
+								<p:column headerText="Estación" style="text-align:center"
+									filterBy="#{com.estacion}">
+									<p:outputLabel value="#{com.estacion}">
+									</p:outputLabel>
+								</p:column>
+								<p:column headerText="Producto" width="100"
+									style="text-align:center" filterBy="#{com.producto}">
+									<p:outputLabel value="#{com.producto}">
+									</p:outputLabel>
+								</p:column>
+								<p:column headerText="Costo Unitario" style="text-align:right">
+									<p:outputLabel value="#{com.costoUnitario}">
+										<f:convertNumber pattern="#,##0.0000" />
+									</p:outputLabel>
+								</p:column>
+								<p:column headerText="Precio Pizarra" style="text-align:right">
+									<p:outputLabel value="#{com.precioPizarra}">
+										<f:convertNumber pattern="#,##0.0000" />
+									</p:outputLabel>
+								</p:column>
+								<p:column headerText="Precio Pactado" style="text-align:right">
+									<p:outputLabel value="#{com.precioPactado}">
+										<f:convertNumber pattern="#,##0.0000" />
+									</p:outputLabel>
+								</p:column>
+								<p:column headerText="Cantidad" style="text-align:right">
+									<p:outputLabel value="#{com.cantidad}">
+										<f:convertNumber pattern="#,##0.0000" />
+									</p:outputLabel>
+								</p:column>
+								<p:column headerText="Total Costo" style="text-align:right">
+									<p:outputLabel value="#{com.totalCosto}">
+										<f:convertNumber pattern="#,##0.0000" />
+									</p:outputLabel>
+								</p:column>
+								<p:column headerText="Total Pizarra" style="text-align:right">
+									<p:outputLabel value="#{com.totalPrecioPizarra}">
+										<f:convertNumber pattern="#,##0.0000" />
+									</p:outputLabel>
+								</p:column>
+								<p:column headerText="Total Pactado" style="text-align:right">
+									<p:outputLabel value="#{com.totalPrecioPactado}">
+										<f:convertNumber pattern="#,##0.0000" />
+									</p:outputLabel>
+								</p:column>
+								<p:column headerText="Ganancia Pizarra" style="text-align:right">
+									<p:outputLabel value="#{com.totalGanaciaPizarra}">
+										<f:convertNumber pattern="#,##0.0000" />
+									</p:outputLabel>
+								</p:column>
+								<p:column headerText="Ganancia Pactado" style="text-align:right">
+									<p:outputLabel value="#{com.totalGanaciaPactado}">
+										<f:convertNumber pattern="#,##0.0000" />
+									</p:outputLabel>
+								</p:column>
+								<p:column headerText="Margen de Perdida"
+									style="text-align:right;">
+									<p:outputLabel style="color:red;font-weight: bold;"
+										rendered="#{com.margenPerdida gt 0}"
+										value="#{com.margenPerdida}">
+										<f:convertNumber pattern="#,##0.0000" />
+									</p:outputLabel>
+									<p:outputLabel style="color: green;font-weight: bold;"
+										rendered="#{com.margenPerdida lt 0}"
+										value="#{com.margenPerdida}">
+										<f:convertNumber pattern="#,##0.0000" />
+									</p:outputLabel>
+									<p:outputLabel value="#{com.margenPerdida}"
+										rendered="#{com.margenPerdida eq 0}"
+										style="font-weight: bold;">
+										<f:convertNumber pattern="#,##0.0000" />
+									</p:outputLabel>
+								</p:column>
+							</p:dataTable>
+						</div>
+					</div>
+					<div class="ui-g-12 ui-lg-12">
+						<div class="card card-w-title">
+							<h3>
+								Estaciones
+								<p:outputLabel
+									value="[ $  #{estadisticoFacturaConsumoBn.valorTotal} ]">
+									<f:convertNumber pattern="#,##0.00" />
+								</p:outputLabel>
+							</h3>
+							<p:chart type="bar" widgetVar="bar" id="bar"
+								model="#{estadisticoFacturaConsumoBn.animatedModel}">
+								<p:ajax event="itemSelect"
+									listener="#{estadisticoFacturaConsumoBn.selectBar}"
+									update=":frm_car_042:pie1,:frm_car_042:lbLinea,:frm_car_042:pie,:frm_car_042:lbPie" />
+							</p:chart>
+						</div>
+					</div>
+					<div class="ui-g-12 ui-lg-6">
+						<div class="card card-w-title">
+							<h3>
+								<p:outputLabel id="lbPie"
+									value="Valor [ #{estadisticoFacturaConsumoBn.estacionSeleccionada.eess} ]" />
+							</h3>
+							<p:chart id="pie" type="pie"
+								model="#{estadisticoFacturaConsumoBn.pieModel}"
+								responsive="true">
+							</p:chart>
+						</div>
+					</div>
+					<div class="ui-g-12 ui-lg-6">
+						<div class="card card-w-title">
+							<h3>
+								<p:outputLabel id="lbLinea"
+									value="Galones [ #{estadisticoFacturaConsumoBn.estacionSeleccionada.eess} ]" />
+							</h3>
+							<p:chart id="pie1" type="pie"
+								model="#{estadisticoFacturaConsumoBn.pieModel1}"
+								responsive="true">
+							</p:chart>
+						</div>
+					</div>
+				</div>
+			</div>
+		</h:form>
+		<ui:include src="/pages/cartera/car_043.xhtml" />
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,62 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+	<p:dialog widgetVar="dlg_car_012" id="dlg_car_012" responsive="true"
+		height="450px" appendTo="@(body)" resizable="false" position="center">
+		<f:facet name="header">
+			<h:outputLabel value="Cliente " />
+			<p:outputLabel value="car_012.xhtml"
+				rendered="#{appMain.usuario.idUsuario eq 1}"></p:outputLabel>
+		</f:facet>
+		<h:form id="frm_car_012">
+			<p:growl autoUpdate="true"></p:growl>
+			<p:commandButton styleClass="secondary"
+				action="#{resumenSeguimientoCarteraBn.vizualizarEstadoCuenta()}"
+				oncomplete="PF('dlg_car_rpt_006').show()" icon="ui-icon-print"
+				update=":frm_car_rpt_006" title="Ver Estado Cuenta"></p:commandButton>
+			<div align="right">
+				<p:commandButton value="Realizar Gestión" styleClass="blue-grey-btn"
+					style="width:auto" icon="ui-icon-person"
+					action="#{resumenSeguimientoCarteraBn.validarGestion()}"
+					update=":frm_car_034" />
+			</div>
+			<br />
+			<p:dataTable id="dtbFacturaCartera" tableStyle="table-layout:auto"
+				paginatorPosition="bottom" style="margin-bottom:10px" reflow="true"
+				value="#{resumenSeguimientoCarteraBn.resumenCarteraSeleccionado.resumenCarteraDetalle}"
+				emptyMessage="Registro no encontrado" var="resumenCarteraDetalle"
+				rowKey="#{resumenCarteraDetalle.idResumenCarteraDetalle}"
+				selection="#{resumenSeguimientoCarteraBn.resumenCarteraDetalleSeleccionados}">
+				<p:column selectionMode="multiple" style="text-align:center" />
+				<p:column headerText="Identificación">
+					<h:outputText
+						value="#{resumenCarteraDetalle.persona.identificacionPersona}" />
+				</p:column>
+				<p:column headerText="Razón Social"
+					filterBy="#{resumenCarteraDetalle.persona.nombreComercial}">
+					<h:outputText
+						value="#{resumenCarteraDetalle.persona.nombreComercial}" />
+				</p:column>
+				<p:column headerText="Correo">
+					<h:outputText value="#{resumenCarteraDetalle.persona.email}" />
+				</p:column>
+				<p:column headerText="Teléfono">
+					<h:outputText
+						value="#{resumenCarteraDetalle.persona.telefonoConvencional}" />
+				</p:column>
+				<p:column headerText="$ Valor Saldo" style="text-align:right">
+					<h:outputText value="#{resumenCarteraDetalle.valorTotal}">
+						<f:convertNumber pattern="#,##0.00" />
+					</h:outputText>
+				</p:column>
+			</p:dataTable>
+
+
+		</h:form>
+		<ui:include src="/pages/reporte/cartera/car_rpt_006.xhtml" />
+		<ui:include src="/pages/cartera/car_034.xhtml" />
+	</p:dialog>
+</ui:composition>

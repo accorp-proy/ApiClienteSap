@@ -1,0 +1,206 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="/WEB-INF/template.xhtml">
+	<ui:define name="content">
+		<h:form id="frm_car_033">
+			<p:growl autoUpdate="false" id="msg"></p:growl>
+			<p:toolbar>
+				<f:facet name="left">
+					<p:outputLabel value="Indicadores de Gestión"></p:outputLabel>
+					<span class="ui-separator"> <span
+						class="ui-icon ui-icon-grip-dotted-vertical" />
+					</span>
+				</f:facet>
+			</p:toolbar>
+			<div class="ui-g ui-fluid">
+				<div class="ui-g-12 ui-lg-3">
+					<div class="card">
+						<p:calendar placeholder="Fecha Cierre" pattern="dd-MM-yyyy"
+							showOn="button"></p:calendar>
+						<p:separator></p:separator>
+						<p:menu toggleable="true" style="width:100%">
+							<p:submenu label="Empresas" icon="fa fa-compress">
+								<c:forEach items="#{indicadorGestionCierreBn.empresas}"
+									var="empresa">
+									<p:menuitem value="#{empresa.descripcion}"
+										action="#{indicadorGestionCierreBn.consultarCompaniaVirtual(empresa)}"
+										update="frm_car_033:dtbCompaniaVirtual" />
+								</c:forEach>
+							</p:submenu>
+						</p:menu>
+						<p:separator />
+						<p:dataTable id="dtbCompaniaVirtual"
+							tableStyle="table-layout:auto"
+							emptyMessage="Registro no encontrado" style="margin-bottom:10px"
+							reflow="true"
+							value="#{indicadorGestionCierreBn.companiasVirtual}"
+							var="companiaVirtual"
+							rowKey="#{companiaVirtual.idCompaniaVirtual}" scrollable="true"
+							scrollHeight="184" selectionMode="single"
+							selection="#{indicadorGestionCierreBn.companiaVirtualSeleccionado}">
+							<p:ajax event="rowSelect" process="@this dtbCompaniaVirtual"
+								immediate="true"
+								listener="#{indicadorGestionCierreBn.presentarIndicadorGestion(companiaVirtual)}"
+								update="frm_car_033"></p:ajax>
+							<p:column headerText="Compañia Virtual">
+								<h:outputText value="#{companiaVirtual.descripcion}" />
+							</p:column>
+						</p:dataTable>
+					</div>
+				</div>
+				<div class="ui-g-12 ui-lg-9">
+					<div class="card" align="center">
+						<p:panelGrid columns="1" layout="grid" style="width:100%"
+							styleClass="ui-panelgrid-blank form-group">
+							<p:outputLabel style="font-weight:bold;font-size:20px"
+								rendered="#{indicadorGestionCierreBn.companiaVirtualSeleccionado != null}"
+								value="Indicador Gestión   #{indicadorGestionCierreBn.companiaVirtualSeleccionado.descripcion}"></p:outputLabel>
+						</p:panelGrid>
+						<p:panelGrid columns="4" layout="grid" style="width:100%"
+							styleClass="ui-panelgrid-blank form-group">
+							<p:commandButton icon="fa fa-usd" value="DSO"
+								style=" font-weight: bold;" update="frm_car_033"></p:commandButton>
+							<p:commandButton icon="fa fa-usd" value="Morosidad"
+								style="font-weight: bold" update="frm_car_033">
+							</p:commandButton>
+							<p:commandButton icon="fa fa-usd" value="Deuda Vencidad"
+								style=" font-weight: bold;" update="frm_car_033"></p:commandButton>
+							<p:commandButton icon="fa fa-usd" value="Clientes Cuadro"
+								style=" font-weight: bold;" update="frm_car_033"></p:commandButton>
+						</p:panelGrid>
+						<p:dataTable
+							rendered="#{indicadorGestionCierreBn.vistaDetalle eq 1}">
+							<f:facet name="header">
+						          Meses							
+					            </f:facet>
+							<p:column headerText="Mes Anterior">
+							</p:column>
+							<p:column headerText="Mes #1">
+							</p:column>
+							<p:column headerText="Mes #2">
+							</p:column>
+							<p:column headerText="Mes #3">
+							</p:column>
+						</p:dataTable>
+						<p:panel rendered="#{indicadorGestionCierreBn.vistaDetalle eq 1}">
+							<div class="card">
+								<h1 class="centerText">DSO</h1>
+								<p:chart id="bar" type="bar"
+									model="#{indicadorGestionCierreBn.barChartModelDSO}"
+									responsive="true" />
+							</div>
+						</p:panel>
+						<p:dataTable
+							rendered="#{indicadorGestionCierreBn.vistaDetalle eq 2}">
+							<f:facet name="header">
+						          Meses							
+					            </f:facet>
+							<p:column headerText="Mes Anterior">
+							</p:column>
+							<p:column headerText="Mes #1">
+							</p:column>
+							<p:column headerText="Mes #2">
+							</p:column>
+							<p:column headerText="Mes #3">
+							</p:column>
+						</p:dataTable>
+						<p:panel rendered="#{indicadorGestionCierreBn.vistaDetalle eq 2}">
+							<div class="card card-w-title" style="height: 392px">
+								<h1>
+									<div style="float: left; width: 70%">DSO</div>
+									<div style="float: right; width: 30%">
+										<p:commandButton type="button" value="Restaurar"
+											rendered="#{indicadorGestionCierreBn.vistaDetalle eq 2}"
+											icon="ui-icon-cancel" onclick="PF('linea').resetZoom()" />
+									</div>
+								</h1>
+								<br />
+								<p:chart type="line"
+									rendered="#{indicadorGestionCierreBn.vistaDetalle eq 2}"
+									model="#{indicadorGestionCierreBn.lineChartModelMorosidad}"
+									id="barFecha" style="width:100%;" responsive="true"
+									widgetVar="linea" />
+							</div>
+						</p:panel>
+						<p:dataTable id="dtbPagos" scrollable="true" scrollHeight="250"
+							value="#{estadoClienteBn.listaPagoCartera}"
+							tableStyle="table-layout:auto" reflow="true"
+							emptyMessage="Registros no encontrados" var="pag"
+							rendered="#{estadoClienteBn.vistaDetalle eq 3}">
+							<f:facet name="header">
+						          Lista de Pagos							
+					            </f:facet>
+							<p:column headerText="Secuencia">
+								<p:outputLabel value="#{pag.secuencia}">
+								</p:outputLabel>
+							</p:column>
+							<p:column headerText="Tipo Documento">
+								<p:outputLabel value="#{pag.tipoDocumento}">
+								</p:outputLabel>
+							</p:column>
+							<p:column headerText="Fecha de Pago">
+								<p:outputLabel value="#{pag.fechaPago}">
+									<f:convertDateTime pattern="dd-MM-yyyy" />
+								</p:outputLabel>
+							</p:column>
+							<p:column headerText="Nro. Factura">
+								<p:outputLabel value="#{pag.nroFactura}">
+								</p:outputLabel>
+							</p:column>
+							<p:column headerText="Nro. Recibo">
+								<p:outputLabel value="#{pag.nroRecibo}">
+								</p:outputLabel>
+							</p:column>
+							<p:column headerText="Valor">
+								<p:outputLabel value="#{pag.valor}">
+									<f:convertNumber pattern="#,##0.00" />
+								</p:outputLabel>
+							</p:column>
+						</p:dataTable>
+						<p:dataTable id="dtbConsumo" scrollable="true" scrollHeight="250"
+							value="#{estadoClienteBn.listaConsumoCartera}"
+							tableStyle="table-layout:auto" reflow="true"
+							emptyMessage="Registros no encontrados" var="con"
+							rendered="#{estadoClienteBn.vistaDetalle eq 4}">
+							<f:facet name="header">
+						            Lista de Consumos Corriente									
+					            </f:facet>
+							<p:column headerText="Fecha Emisión">
+								<p:outputLabel value="#{con.fechaEmision}">
+									<f:convertDateTime pattern="dd-MM-yyyy" />
+								</p:outputLabel>
+							</p:column>
+							<p:column headerText="Fecha Vencimiento">
+								<p:outputLabel value="#{con.fechaVencimiento}">
+									<f:convertDateTime pattern="dd-MM-yyyy" />
+								</p:outputLabel>
+							</p:column>
+
+							<p:column headerText="Tipo Documento">
+								<p:outputLabel value="#{con.tipoDocumento.descripcion}">
+									<f:convertDateTime pattern="dd-MM-yyyy" />
+								</p:outputLabel>
+							</p:column>
+							<p:column headerText="Valor Total" style="text-align:right">
+								<p:outputLabel value="#{con.valorTotal}">
+									<f:convertNumber pattern="#,##0.00" />
+								</p:outputLabel>
+							</p:column>
+							<p:column headerText="Valor Pendiente" style="text-align:right">
+								<p:outputLabel value="#{con.valorSaldo}">
+									<f:convertNumber pattern="#,##0.00" />
+								</p:outputLabel>
+							</p:column>
+						</p:dataTable>
+					</div>
+				</div>
+			</div>
+		</h:form>
+	</ui:define>
+</ui:composition>

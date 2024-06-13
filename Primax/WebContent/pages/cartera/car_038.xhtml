@@ -1,0 +1,49 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+	<p:dialog widgetVar="dlg_car_038" id="dlg_car_038" responsive="true"
+		appendTo="@(body)" resizable="false">
+		<f:facet name="header">
+			<h:outputLabel value="Migración " />
+			<p:outputLabel value="car_038.xhtml"
+				rendered="#{appMain.usuario.idUsuario eq 1}"></p:outputLabel>
+		</f:facet>
+		<h:form id="frm_car_038">
+			<p:growl autoUpdate="false" id="msg"></p:growl>
+			<div align="right">
+				<p:commandButton icon="ui-icon-save" update=":frm_car_037,msg"
+					styleClass="secondary" action="#{migracionConsumoBn.migrar()}"
+					title="Migrar" onstart="PF('bar').start()">
+				</p:commandButton>
+			</div>
+			<div class="ui-fluid">
+				<p:panelGrid id="pnlGrid_01" columns="2"
+					columnClasses="ui-grid-col-5" layout="grid"
+					styleClass="ui-panelgrid-blank">
+					<p:calendar value="#{migracionConsumoBn.fechaDesde}"
+						pattern="dd-MM-yyyy" showOn="button"></p:calendar>
+					<p:calendar value="#{migracionConsumoBn.fechaHasta}"
+						pattern="dd-MM-yyyy" showOn="button"></p:calendar>
+				</p:panelGrid>
+				<p:panelGrid id="pnlGrid_02" columns="2"
+					columnClasses="ui-grid-col-4" layout="grid"
+					styleClass="ui-panelgrid-blank">
+					<p:progressBar widgetVar="bar" ajax="true" labelTemplate="{value}%"
+						styleClass="animated" value="#{migracionConsumoBn.progress}"
+						global="false">
+						<p:ajax event="complete"
+							listener="#{migracionConsumoBn.subidaCompleta}" />
+					</p:progressBar>
+				</p:panelGrid>
+				<p:panelGrid id="pnlGrid_03" columns="1"
+					columnClasses="ui-grid-col-6" layout="grid"
+					styleClass="ui-panelgrid-blank">
+					<p:outputLabel value="Consumos "></p:outputLabel>
+				</p:panelGrid>
+			</div>
+		</h:form>
+	</p:dialog>
+</ui:composition>

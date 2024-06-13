@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<title>.:PRIMAX:.</title>
+	<link rel="shortcut icon" type="image/x-icon"
+		href="#{facesContext.externalContext.requestContextPath}/resources/images/iconos/icono.png" />
+	<link
+		href="#{facesContext.externalContext.requestContextPath}/resources/css/jquery.growl.css"
+		rel="stylesheet" type="text/css" />
+	<f:facet name="first">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta name="viewport"
+			content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+	</f:facet>
+	<h:outputScript name="js/ripple.js" library="ultima-layout" />
+	<h:outputScript name="js/layout.js" library="ultima-layout" />
+</h:head>
+<h:body styleClass="login-body">
+	<div class="card login-panel ui-fluid">
+		<div class="ui-g">
+			<div class="ui-g-12">
+				<p:graphicImage name="images/logoL.png"
+					style="width:200px;height:100px" library="ultima-layout" />
+			</div>
+			<h:form id="login-form">
+				<div class="ui-g-12">
+					<h:panelGroup styleClass="md-inputfield">
+						<p:inputText id="user" value="#{loginBean.user}" maxlength="30"
+							onkeypress="return onSubmitEvent(event)" onblur="upperCase()">
+						</p:inputText>
+						<label>Usuario</label>
+					</h:panelGroup>
+				</div>
+				<div class="ui-g-12">
+					<h:panelGroup styleClass="md-inputfield">
+						<p:password id="pass" value="#{loginBean.pass}" maxlength="30"
+							onkeypress="return onSubmitEvent(event)">
+						</p:password>
+						<label>Contraseña</label>
+					</h:panelGroup>
+				</div>
+				<div class="ui-g-12">
+					<p:commandButton id="login-button" styleClass="login__submit"
+						onclick="doLogin()" value="Iniciar">
+						<p:ajax delay="600" process="@form" listener="#{loginBean.login}"></p:ajax>
+					</p:commandButton>
+				</div>
+			</h:form>
+		</div>
+	</div>
+	<h:outputStylesheet name="css/ripple.css" library="ultima-layout" />
+	<h:outputStylesheet name="css/layout-#{guestPreferences.theme}.css"
+		library="ultima-layout" />
+	<script type="text/javascript"
+		src="#{facesContext.externalContext.requestContextPath}/resources/js/jquery.growl.js"></script>
+	<script type="text/javascript"
+		src="#{facesContext.externalContext.requestContextPath}/resources/js/app.js"></script>
+</h:body>
+</html>

@@ -1,0 +1,40 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+	<ui:define name="content">
+		<h:form id="frm_car_rpt_002">
+			<p:fieldset legend="Filtros de búsqueda" toggleable="true"
+				toggleSpeed="500">
+				<p:panelGrid id="pnlGrid" style="width:100%" styleClass="fullSize"
+					columns="6"
+					columnClasses="ui-grid-col-2,ui-grid-col-3,ui-grid-col-2,ui-grid-col-3,ui-grid-col-1"
+					layout="grid">
+					<p:outputLabel value="Fecha Desde: " />
+					<p:calendar id="calendarDesde" navigator="true" pattern="dd/MM/yyy"
+						value="#{BusquedaBn.fechaSeleccionadaDesde}">
+						<p:ajax event="dateSelect" process="@this"></p:ajax>
+					</p:calendar>
+					<p:outputLabel value="Fecha Hasta: " />
+					<p:calendar id="calendarHasta" navigator="true" pattern="dd/MM/yyy"
+						value="#{BusquedaBn.fechaSeleccionadaHasta}">
+						<p:ajax event="dateSelect" process="@this"></p:ajax>
+					</p:calendar>
+					<div align="right">
+						<p:commandButton icon="ui-icon-picture-as-pdf" update="pnl_rep"
+							process="@this pnlGrid,frm_car_rpt_002" ajax="false"
+							immediate="true" action="#{ReporteBn.imprimirPdf()}"></p:commandButton>
+					</div>
+				</p:panelGrid>
+				<p:panelGrid id="pnl_rep" styleClass="sinborde" style="width:100%">
+					<p:column>
+						<iframe height="480px" width="100%"
+							src="#{request.contextPath}/reporte?rptid=2&amp;p1=#{appMain.usuario.idUsuario.toString()}&amp;p2=#{BusquedaBn.fechaDesdeTexto}&amp;p3=#{BusquedaBn.fechaHastaTexto}"></iframe>
+					</p:column>
+				</p:panelGrid>
+			</p:fieldset>
+		</h:form>
+	</ui:define>
+</ui:composition>

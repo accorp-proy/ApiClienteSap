@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptSubEstadoCuentaClienteFactura" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="c14c0d26-c39c-4405-a8c3-ddba1cf4bbc9">
+	<property name="ireport.zoom" value="4.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="style1">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{tipodocumentoalterno}=="NC"]]></conditionExpression>
+			<style forecolor="#FF0033"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="par_id_cliente" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="par_fecha_corte" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select
+est.id_estado_cuenta_cliente as idEstadoCuentaCliente,
+est.id_cliente as idCliente,
+' '||est.descripcion as descripcion,
+est.nro_documento as nroDocumento,
+est.fecha_emision as fechaEmision,
+est.fecha_vencimiento as fechaVencimiento,
+est.valor_total as valortotal,
+est.valor_pendiente  as valorPendiente,
+(CASE WHEN tipo_documento_alterno = 'NC' then (est.valor_pendiente * -1) else est.valor_pendiente end ) as  valorPendiente_a,
+est.estado_cartera as estado,
+est.tipo_documento as tipoDcumento,
+est.tipo_documento_alterno tipoDocumentoAlterno
+from estado_cuenta_cliente_et est
+where est.id_cliente = $P{par_id_cliente}
+and est.fecha_corte = to_date($P{par_fecha_corte},'DD/MM/YYYY')
+order by  est.fecha_emision]]>
+	</queryString>
+	<field name="idestadocuentacliente" class="java.lang.Long"/>
+	<field name="idcliente" class="java.lang.Long"/>
+	<field name="descripcion" class="java.lang.String"/>
+	<field name="nrodocumento" class="java.lang.String"/>
+	<field name="fechaemision" class="java.sql.Timestamp"/>
+	<field name="fechavencimiento" class="java.sql.Timestamp"/>
+	<field name="valortotal" class="java.lang.Double"/>
+	<field name="valorpendiente" class="java.lang.Double"/>
+	<field name="valorpendiente_a" class="java.lang.Double"/>
+	<field name="estado" class="java.lang.String"/>
+	<field name="tipodcumento" class="java.lang.String"/>
+	<field name="tipodocumentoalterno" class="java.lang.String"/>
+	<variable name="totalPendiente" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[!$F{tipodocumentoalterno}.equals("NC") ? $F{valorpendiente} : 0D]]></variableExpression>
+	</variable>
+	<variable name="totalNC" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{tipodocumentoalterno}.equals("NC") ? $F{valorpendiente} : 0D]]></variableExpression>
+	</variable>
+	<variable name="total" class="java.lang.Double">
+		<variableExpression><![CDATA[($V{totalPendiente} - $V{totalNC})]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="30" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="15" uuid="29cbb424-106f-484c-8d84-320baa819416"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ DETALLE FACTURA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="15" width="120" height="15" uuid="279f17fc-fe2d-4462-bab3-607e9fbfc7fc"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ PRODUCTO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="180" y="15" width="80" height="15" uuid="39a1c580-8759-4817-9f5b-c073a8f768d5"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[F.FACTURA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="260" y="15" width="80" height="15" uuid="2a006448-b2a7-4c08-929a-8b913b71efa9"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[F.VCTO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="120" y="15" width="60" height="15" uuid="9e51ba52-ed86-4e8b-95ba-523b716c081d"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ # FACTURA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="340" y="15" width="90" height="15" uuid="f1fcada7-0955-4314-8692-99141fdd0347"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.9"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[MONTO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="430" y="15" width="125" height="15" uuid="30761de8-9e17-4b6b-8654-9d2500ac66de"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ESTADO]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="120" height="15" uuid="3784234a-03e5-49dc-b6e0-183bd9071336"/>
+				<box>
+					<leftPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{descripcion}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="120" y="0" width="60" height="15" uuid="2af0fb6b-829f-4088-8c36-7c95c1506491"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nrodocumento}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="180" y="0" width="80" height="15" uuid="379e1bf7-3bb9-4bcb-b0f6-fc8b303f649a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fechaemision}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="260" y="0" width="80" height="15" uuid="8ab19dea-3e08-430b-9c39-c637d7d57230"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fechavencimiento}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement style="style1" mode="Opaque" x="340" y="1" width="90" height="14" uuid="afb0c3b7-2e6a-46c7-8e57-12d58fb161a3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valorpendiente_a}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="430" y="0" width="125" height="15" uuid="2baf76e0-9227-4724-9639-c1b9979ce8d6"/>
+				<box>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{estado}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="16" splitType="Stretch">
+			<line>
+				<reportElement x="0" y="0" width="555" height="1" uuid="753be0cc-8953-4da8-a652-2b4f18334a42"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="340" y="1" width="90" height="15" uuid="7d46ff07-e3a6-4c4f-b845-816f45262d5e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{total}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

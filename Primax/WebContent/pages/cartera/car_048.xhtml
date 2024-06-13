@@ -1,0 +1,230 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="/WEB-INF/template.xhtml">
+	<ui:define name="content">
+		<h:form id="frm_car_042">
+			<p:growl autoUpdate="false" id="msg"></p:growl>
+			<div class="ui-g ui-fluid">
+				<div class="ui-g-12 ui-lg-12">
+					<div class="card">
+						<p:panelGrid columns="4" layout="grid" style="width:100%"
+							styleClass="ui-panelgrid-blank form-group">
+							<h:panelGroup styleClass="md-inputfield">
+								<p:calendar value="#{estadisticoPresupuestoBn.fechaDesde}"
+									pattern="dd-MM-yyyy" showOn="button">
+									<p:ajax event="dateSelect" process="@this"></p:ajax>
+								</p:calendar>
+								<label>Mes</label>
+							</h:panelGroup>
+							<h:panelGroup>
+								<p:selectCheckboxMenu id="menu"
+									value="#{estadisticoPresupuestoBn.selectednegocios}"
+									label="Negocios" filter="true" filterMatchMode="startsWith"
+									panelStyle="width:250px">
+									<f:selectItems value="#{estadisticoPresupuestoBn.negocios}" />
+								</p:selectCheckboxMenu>
+							</h:panelGroup>
+							<p:commandButton title="Visializar Datos" value="Vizualizar"
+								update="frm_car_042"
+								action="#{estadisticoPresupuestoBn.visualizar()}"
+								icon="fa fa-bar-chart" styleClass="secondary"></p:commandButton>
+						</p:panelGrid>
+					</div>
+				</div>
+				<div class="ui-g-12 ui-lg-12">
+					<div class="ui-g-6 ui-lg-6">
+						<div class="card card-w-title">
+							<p:dataTable id="dtbPresupuesto" scrollable="true"
+								scrollHeight="250"
+								value="#{estadisticoPresupuestoBn.presupuestoDetalles}"
+								emptyMessage="Registros no encontrados" var="presupuesto"
+								rowKey="#{presupuesto.idPresupuestoDetalle}">
+								<f:facet name="header">
+						                      Resumen Día - Semanal del Negocio				
+					            			</f:facet>
+								<p:column headerText="Días" style="text-align:center">
+									<p:outputLabel value="#{presupuesto.dia}">
+									</p:outputLabel>
+								</p:column>
+								<p:column headerText="Volumen" style="text-align:center">
+									<p:outputLabel value="#{presupuesto.volumen}">
+										<f:convertNumber pattern="#,##0.0000" />
+									</p:outputLabel>
+								</p:column>
+								<p:column headerText="Corriente" style="text-align:center">
+									<p:outputLabel value="#{presupuesto.corriente}" />
+								</p:column>
+								<p:column headerText="Calendario" style="text-align:center">
+									<p:outputLabel value="#{presupuesto.calendario}" />
+								</p:column>
+								<p:column headerText="Proyeción Análisis Diario"
+									style="text-align:center">
+									<p:outputLabel value="#{presupuesto.proyeccion}">
+										<f:convertNumber pattern="#,##0.0000" />
+									</p:outputLabel>
+								</p:column>
+								<p:columnGroup type="footer">
+									<p:row>
+										<p:column footerText="Total:" />
+										<p:column
+											footerText="#{estadisticoPresupuestoBn.totalVolumenSP}">
+										</p:column>
+										<p:column
+											footerText="#{estadisticoPresupuestoBn.totalCorrienteSP}" />
+										<p:column
+											footerText="#{estadisticoPresupuestoBn.totalCalendarioSP}" />
+										<p:column
+											footerText="#{estadisticoPresupuestoBn.totalProyeccionSP}" />
+									</p:row>
+								</p:columnGroup>
+							</p:dataTable>
+						</div>
+					</div>
+					<h3>#{estadisticoPresupuestoBn.titulo}</h3>
+
+					<div class="ui-g-6 ui-lg-6">
+						<div class="card card-w-title">
+							<p:dataTable id="dtbCumplimiento" scrollable="true"
+								scrollHeight="250"
+								value="#{estadisticoPresupuestoBn.cumplimientoDetalles}"
+								emptyMessage="Registros no encontrados" var="cumplimiento"
+								rowKey="#{cumplimiento.idCumplimientoDetalle}">
+								<f:facet name="header">
+						                      Resumen 							
+					            			</f:facet>
+								<p:column headerText="Días" style="text-align:center">
+									<p:outputLabel value="#{cumplimiento.dia}">
+									</p:outputLabel>
+								</p:column>
+								<p:column headerText="Max.Mes Anterior"
+									style="text-align:center">
+									<p:outputLabel value="#{cumplimiento.maxMesAnterior}">
+										<f:convertNumber pattern="#,##0.0000" />
+									</p:outputLabel>
+								</p:column>
+								<p:column headerText="Vol.Expectativa" style="text-align:center">
+									<p:outputLabel value="#{cumplimiento.volExpectativa}">
+										<f:convertNumber pattern="#,##0.0000" />
+									</p:outputLabel>
+								</p:column>
+								<p:column headerText="Promedio Actual" style="text-align:center">
+									<p:outputLabel value="#{cumplimiento.promedioActual}">
+										<f:convertNumber pattern="#,##0.0000" />
+									</p:outputLabel>
+								</p:column>
+								<p:column headerText="+/-" style="text-align:center">
+									<p:outputLabel value="#{cumplimiento.promedioTotal}">
+										<f:convertNumber pattern="#,##0.0000" />
+									</p:outputLabel>
+								</p:column>
+								<p:columnGroup type="footer">
+									<p:row>
+										<p:column footerText="Total:" />
+										<p:column
+											footerText="#{estadisticoPresupuestoBn.totalMaxMesAntSC}">
+										</p:column>
+										<p:column
+											footerText="#{estadisticoPresupuestoBn.totalVolExpectativaSC}" />
+										<p:column
+											footerText="#{estadisticoPresupuestoBn.totalPromedioActualSC}" />
+										<p:column
+											footerText="#{estadisticoPresupuestoBn.totalPromedioTotalSC}" />
+									</p:row>
+								</p:columnGroup>
+							</p:dataTable>
+						</div>
+					</div>
+				</div>
+				<div class="ui-g-12 ui-lg-12">
+					<div class="ui-g-3 ui-lg-3">
+						<div class="card card-w-title">
+							<p:dataTable id="dbResumenNegocio1"
+								emptyMessage="Registros no encontrados" var="resumen"
+								value="#{estadisticoPresupuestoBn.resumen1}">
+								<f:facet name="header">
+						                      Negocios 							
+					            			</f:facet>
+								<p:column headerText="Negocio" style="text-align:left">
+									<p:outputLabel value="#{resumen.descripcion}" />
+								</p:column>
+								<p:column headerText="Volumen" style="text-align:center">
+									<p:outputLabel value="#{resumen.volumen}">
+										<f:convertNumber pattern="#,##0.0000" />
+									</p:outputLabel>
+								</p:column>
+								<p:columnGroup type="footer">
+									<p:row>
+										<p:column footerText="Total General:" />
+										<p:column
+											footerText="#{estadisticoPresupuestoBn.totalResumenVolumenS}">
+										</p:column>
+									</p:row>
+								</p:columnGroup>
+							</p:dataTable>
+						</div>
+					</div>
+					<div class="ui-g-3 ui-lg-3">
+						<div class="card card-w-title">
+							<p:dataTable id="dbResumenNegocio2"
+								emptyMessage="Registros no encontrados" var="resumen"
+								value="#{estadisticoPresupuestoBn.resumen2}">
+								<f:facet name="header">
+						                      Negocios 							
+					            			</f:facet>
+								<p:column headerText="Producto" style="text-align:left">
+									<p:outputLabel value="#{resumen.descripcion}" />
+								</p:column>
+								<p:column headerText="Volumen" style="text-align:center">
+									<p:outputLabel value="#{resumen.volumen}">
+										<f:convertNumber pattern="#,##0.0000" />
+									</p:outputLabel>
+								</p:column>
+								<p:column headerText="%" style="text-align:center">
+									<p:outputLabel value="#{resumen.porcentaje}">
+										<f:convertNumber pattern="##" />
+									</p:outputLabel>
+								</p:column>
+								<p:columnGroup type="footer">
+									<p:row>
+										<p:column footerText="Total General:" />
+										<p:column
+											footerText="#{estadisticoPresupuestoBn.totalResumen1VolumenS}">
+										</p:column>
+										<p:column
+											footerText="#{estadisticoPresupuestoBn.totalPorcentaje}">
+										</p:column>
+									</p:row>
+								</p:columnGroup>
+							</p:dataTable>
+						</div>
+					</div>
+					<div class="ui-g-6 ui-lg-6">
+						<div class="card card-w-title">
+							<p:dataTable id="dbResumen"
+								emptyMessage="Registros no encontrados" var="resumen"
+								value="#{estadisticoPresupuestoBn.resumen}">
+								<f:facet name="header">
+						                      Resumen 							
+					            			</f:facet>
+								<p:column style="text-align:center">
+									<p:outputLabel value="#{resumen.descripcion}" />
+								</p:column>
+								<p:column style="text-align:center">
+									<p:outputLabel value="#{resumen.volumen}">
+										<f:convertNumber pattern="#,##0.0000" />
+									</p:outputLabel>
+								</p:column>
+							</p:dataTable>
+						</div>
+					</div>
+				</div>
+			</div>
+		</h:form>
+	</ui:define>
+</ui:composition>

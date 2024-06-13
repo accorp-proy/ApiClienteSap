@@ -1,0 +1,37 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+	<p:dialog widgetVar="dlg_car_034" id="dlg_car_034" responsive="true"
+		appendTo="@(body)" resizable="false" hideEffect="scale">
+		<f:facet name="header">
+			<h:outputLabel value="Realizar Gestión " />
+			<p:outputLabel value="car_034.xhtml"
+				rendered="#{appMain.usuario.idUsuario eq 1}"></p:outputLabel>
+		</f:facet>
+		<h:form id="frm_car_034">
+			<p:growl autoUpdate="true"></p:growl>
+			<div class="ui-g ui-fluid">
+				<div class="ui-g-12 ui-lg-12">
+					<div class="card card-w-title">
+						<h1>Gestiones</h1>
+						<p:selectManyCheckbox id="grid"
+							value="#{resumenSeguimientoCarteraBn.gestionesSeleccionada}"
+							layout="responsive" columns="1">
+							<f:selectItems value="#{resumenSeguimientoCarteraBn.gestiones}"
+								var="gestion" itemLabel="#{gestion}" itemValue="#{gestion}">								
+							</f:selectItems>
+						</p:selectManyCheckbox>
+						<div align="center">
+							<p:commandButton value="Ejecutar" icon="fa fa-play" action="#{resumenSeguimientoCarteraBn.ejecucionGestion()}"
+								styleClass="secondary" title="Ejecutar Gestión">
+							</p:commandButton>
+						</div>
+					</div>
+				</div>
+			</div>
+		</h:form>
+	</p:dialog>
+</ui:composition>

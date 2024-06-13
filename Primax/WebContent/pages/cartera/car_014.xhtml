@@ -1,0 +1,47 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+	<p:dialog widgetVar="dlg_car_014" id="dlg_car_014" responsive="true"
+		appendTo="@(body)" resizable="false" hideEffect="scale">
+		<f:facet name="header">
+			<h:outputLabel value="Pagos Realizados " />
+			<p:outputLabel value="car_014.xhtml"
+				rendered="#{appMain.usuario.idUsuario eq 1}"></p:outputLabel>
+		</f:facet>
+		<h:form id="frm_car_014">
+			<p:growl autoUpdate="true"></p:growl>
+			<p:dataTable id="dtbVendedor" paginator="true" rows="6"
+				tableStyle="table-layout:auto" paginatorPosition="bottom"
+				style="margin-bottom:10px" reflow="true"
+				value="#{facturaCarteraBn.facturaCarteraDetalleSeleccionada.pagoCarteraDetalle}"
+				var="pagoCarteraDetalle"
+				rowKey="#{pagoCarteraDetalle.idPagoCarteraDetalle}">
+				<p:column headerText="Secuencia">
+					<p:outputLabel value="#{pagoCarteraDetalle.secuencia}"></p:outputLabel>
+				</p:column>
+				<p:column headerText="Tipo Documento">
+					<p:outputLabel
+						value="#{pagoCarteraDetalle.tipoDocumento.idTipoDocumentoJDE}"></p:outputLabel>
+				</p:column>
+				<p:column headerText="Valor">
+					<p:outputLabel value="#{pagoCarteraDetalle.valor}">
+					<f:convertNumber pattern="#,##0.00" />
+					</p:outputLabel>
+				</p:column>
+				<p:column headerText="Fecha Pago">
+					<p:outputLabel value="#{pagoCarteraDetalle.fechaPago}">
+						<f:convertDateTime pattern="dd-MM-yyyy" />
+					</p:outputLabel>
+				</p:column>
+				<p:column headerText="Nro Recibo Pago">
+					<p:outputLabel value="#{pagoCarteraDetalle.nroRecibo}">
+					
+					</p:outputLabel>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+	</p:dialog>
+</ui:composition>

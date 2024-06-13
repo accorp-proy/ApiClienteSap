@@ -1,0 +1,258 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="/WEB-INF/template.xhtml">
+	<ui:define name="content">
+		<h:form id="frm_car_031">
+			<p:growl autoUpdate="false" id="msg"></p:growl>
+			<p:toolbar>
+				<f:facet name="left">
+					<p:outputLabel value="Estadistico de Cliente"></p:outputLabel>
+					<span class="ui-separator"> <span
+						class="ui-icon ui-icon-grip-dotted-vertical" />
+					</span>
+				</f:facet>
+				<f:facet name="right">
+					<p:commandButton title="Buscar Estado de Cliente"
+						update="frm_car_031" action="#{estadisticoClienteBn.buscar()}"
+						icon="ui-icon-search" styleClass="secondary"></p:commandButton>
+				</f:facet>
+			</p:toolbar>
+			<div class="ui-g ui-fluid">
+				<div class="ui-g-12 ui-lg-12">
+					<div class="card">
+						<p:panelGrid columns="3" layout="grid" style="width:100%"
+							styleClass="ui-panelgrid-blank form-group">
+							<h:panelGroup styleClass="md-inputfield">
+								<p:inputText id="inpNombreCliente" readonly="true"
+									style="width:80%"
+									value="#{estadisticoClienteBn.clienteSeleccionado.persona.nombreCompleto}"></p:inputText>
+								<p:commandButton icon="ui-icon-search" update=":frm_car_032"
+									oncomplete="PF('dlg_car_032').show()" title="Buscar Cliente"></p:commandButton>
+								<label>Cliente</label>
+							</h:panelGroup>
+							<h:panelGroup>
+								<p:selectOneMenu converter="#{empresaConverter}"
+									value="#{estadisticoClienteBn.empresaSeleccionada}">
+									<f:selectItem itemLabel="Empresa" />
+									<f:selectItems value="#{estadisticoClienteBn.empresas}"
+										var="empresa" itemLabel="#{empresa.descripcion}"
+										itemValue="#{empresa}"></f:selectItems>
+									<p:ajax update="frm_car_031:selectOneProductoCartera"
+										process="@this" event="change"></p:ajax>
+								</p:selectOneMenu>
+							</h:panelGroup>
+							<h:panelGroup>
+								<p:selectOneMenu id="selectOneProductoCartera"
+									value="#{estadisticoClienteBn.productoCarteraCobranzaSeleccionado}"
+									converter="#{productoCarteraCobranzaConverter}">
+									<f:selectItem itemLabel="Línea Negocio" />
+									<f:selectItems
+										value="#{estadisticoClienteBn.listProductoCarteraCobranza}"
+										var="productoCarteraCobranza"
+										itemLabel="#{productoCarteraCobranza.descripcion}"
+										itemValue="#{productoCarteraCobranza}">
+									</f:selectItems>
+								</p:selectOneMenu>
+							</h:panelGroup>
+							<h:panelGroup styleClass="md-inputfield">
+								<p:calendar value="#{estadisticoClienteBn.fechaDesde}"
+									pattern="dd-MM-yyyy" showOn="button">
+									<p:ajax event="dateSelect" process="@this"></p:ajax>
+								</p:calendar>
+								<label>Fecha desde</label>
+							</h:panelGroup>
+							<h:panelGroup styleClass="md-inputfield">
+								<p:calendar value="#{estadisticoClienteBn.fechaHasta}"
+									pattern="dd-MM-yyyy" showOn="button">
+									<p:ajax event="dateSelect" process="@this"></p:ajax>
+								</p:calendar>
+								<label>Fecha hasta</label>
+							</h:panelGroup>
+						</p:panelGrid>
+					</div>
+				</div>
+				<div class="ui-g-12 ui-lg-12">
+					<p:tabView>
+						<p:tab title="Facturas">
+							<div class="ui-g ui-fluid">
+								<div class="ui-g-12 ui-lg-4">
+									<div class="card card-w-title">
+										<h1>Resumen de Facturas</h1>
+										<p:chart id="pie" type="pie"
+											model="#{estadisticoClienteBn.pieModel}" responsive="true">
+										</p:chart>
+									</div>
+								</div>
+								<div class="ui-g-12 ui-lg-8">
+									<div class="card card-w-title">
+										<h1>Resumen de Facturas</h1>
+										<p:dataTable id="dtbFactura" scrollable="true"
+											scrollHeight="215" scrollWidth="95%"
+											value="#{estadisticoClienteBn.listaFacturasCartera}"
+											emptyMessage="Registros no encontrados" var="fac">
+											<f:facet name="header">
+						                      Lista de Facturas							
+					            			</f:facet>
+											<p:column headerText="Ruc" width="100"
+												filterBy="#{fac.cliente.persona.identificacionPersona}">
+												<p:outputLabel
+													value="#{fac.cliente.persona.identificacionPersona}">
+												</p:outputLabel>
+											</p:column>
+											<p:column headerText="Cliente" width="250"
+												filterBy="#{fac.cliente.idClienteJDE}">
+												<p:outputLabel
+													value="#{fac.cliente.idClienteJDE} - #{fac.cliente.companiaVirtual.descripcion}">
+												</p:outputLabel>
+											</p:column>
+											<p:column headerText="Nombre" width="250"
+												filterBy="#{fac.cliente.persona.nombreCompleto}">
+												<p:outputLabel value="#{fac.cliente.persona.nombreCompleto}">
+												</p:outputLabel>
+											</p:column>
+											<p:column headerText="Nro. Factura" width="100"
+												filterBy="#{fac.nroFactura}">
+												<p:outputLabel value="#{fac.nroFactura}">
+												</p:outputLabel>
+											</p:column>
+											<p:column headerText="Emisión" width="100"
+												style="text-alig:center">
+												<p:outputLabel value="#{fac.fechaEmision}">
+													<f:convertDateTime pattern="dd-MM-yyyy" />
+												</p:outputLabel>
+											</p:column>
+											<p:column headerText="Vencimiento" width="100"
+												style="text-alig:center">
+												<p:outputLabel value="#{fac.fechaVencimiento}">
+													<f:convertDateTime pattern="dd-MM-yyyy" />
+												</p:outputLabel>
+											</p:column>
+											<p:column headerText="Saldo" style="text-align:right"
+												width="100">
+												<p:outputLabel value="#{fac.valorSaldo}">
+													<f:convertNumber pattern="#,##0.00" />
+												</p:outputLabel>
+											</p:column>
+											<p:column headerText="Valor Pagado" style="text-align:right"
+												width="100">
+												<p:outputLabel value="#{fac.valorPagado}">
+													<f:convertNumber pattern="#,##0.00" />
+												</p:outputLabel>
+											</p:column>
+											<p:column headerText="Valor Total" style="text-align:right"
+												width="100">
+												<p:outputLabel value="#{fac.valorTotal}">
+													<f:convertNumber pattern="#,##0.00" />
+												</p:outputLabel>
+											</p:column>
+										</p:dataTable>
+									</div>
+								</div>
+							</div>
+						</p:tab>
+						<p:tab title="Consumos">
+							<div class="card card-w-title">
+								<h1>
+									<div style="float: left; width: 70%">Consumos</div>
+									<div style="float: right; width: 30%">
+										<p:commandButton type="button" value="Restaurar"
+											icon="ui-icon-cancel" onclick="PF('linea').resetZoom()" />
+									</div>
+								</h1>
+								<br />
+								<p:chart type="line"
+									model="#{estadisticoClienteBn.animatedModel}" id="barFecha"
+									style="width:100%;" responsive="true" widgetVar="linea" />
+							</div>
+						</p:tab>
+						<p:tab title="Pagos">
+							<div class="card card-w-title">
+								<h1>Pagos</h1>
+								<p:chart type="bar"
+									model="#{estadisticoClienteBn.animatedModel2}" />
+								<p:dataTable scrollable="true" scrollHeight="215"
+									scrollWidth="95%"
+									value="#{estadisticoClienteBn.listaFacturasCartera}"
+									emptyMessage="Registros no encontrados" var="fac">
+									<f:facet name="header">
+						                      Lista de Facturas							
+					            			</f:facet>
+									<p:column headerText="Estado" width="100" style="text-align:center">
+									<p:outputLabel rendered="#{estadisticoClienteBn.verificarFacturaPago(fac) eq 0}">
+										<i class="fa fa-circle" aria-hidden="true" style="color:#E91E63" title="Factura inpaga"></i>
+										</p:outputLabel>
+										<p:outputLabel rendered="#{estadisticoClienteBn.verificarFacturaPago(fac) eq 1}">
+										<i class="fa fa-circle" aria-hidden="true" style="color:#4CAF50" title="Factura pagada a tiempo"></i>
+										</p:outputLabel>
+										<p:outputLabel rendered="#{estadisticoClienteBn.verificarFacturaPago(fac) eq 2}">
+										<i class="fa fa-circle" aria-hidden="true" style="color:#FF6900" title="Factura pagada atrazada"></i>
+										</p:outputLabel>
+									</p:column>
+									<p:column headerText="Ruc" width="100"
+										filterBy="#{fac.cliente.persona.identificacionPersona}">
+										<p:outputLabel
+											value="#{fac.cliente.persona.identificacionPersona}">
+										</p:outputLabel>
+									</p:column>
+									<p:column headerText="Cliente" width="250"
+										filterBy="#{fac.cliente.idClienteJDE}">
+										<p:outputLabel
+											value="#{fac.cliente.idClienteJDE} - #{fac.cliente.companiaVirtual.descripcion}">
+										</p:outputLabel>
+									</p:column>
+									<p:column headerText="Nombre" width="250"
+										filterBy="#{fac.cliente.persona.nombreCompleto}">
+										<p:outputLabel value="#{fac.cliente.persona.nombreCompleto}">
+										</p:outputLabel>
+									</p:column>
+									<p:column headerText="Nro. Factura" width="100"
+										filterBy="#{fac.nroFactura}">
+										<p:outputLabel value="#{fac.nroFactura}">
+										</p:outputLabel>
+									</p:column>
+									<p:column headerText="Emisión" width="100"
+										style="text-alig:center">
+										<p:outputLabel value="#{fac.fechaEmision}">
+											<f:convertDateTime pattern="dd-MM-yyyy" />
+										</p:outputLabel>
+									</p:column>
+									<p:column headerText="Vencimiento" width="100"
+										style="text-alig:center">
+										<p:outputLabel value="#{fac.fechaVencimiento}">
+											<f:convertDateTime pattern="dd-MM-yyyy" />
+										</p:outputLabel>
+									</p:column>
+									<p:column headerText="Saldo" style="text-align:right"
+										width="100">
+										<p:outputLabel value="#{fac.valorSaldo}">
+											<f:convertNumber pattern="#,##0.00" />
+										</p:outputLabel>
+									</p:column>
+									<p:column headerText="Valor Pagado" style="text-align:right"
+										width="100">
+										<p:outputLabel value="#{fac.valorPagado}">
+											<f:convertNumber pattern="#,##0.00" />
+										</p:outputLabel>
+									</p:column>
+									<p:column headerText="Valor Total" style="text-align:right"
+										width="100">
+										<p:outputLabel value="#{fac.valorTotal}">
+											<f:convertNumber pattern="#,##0.00" />
+										</p:outputLabel>
+									</p:column>
+								</p:dataTable>
+							</div>
+						</p:tab>
+					</p:tabView>
+				</div>
+			</div>
+		</h:form>
+		<ui:include src="/pages/cartera/car_032.xhtml" />
+	</ui:define>
+</ui:composition>

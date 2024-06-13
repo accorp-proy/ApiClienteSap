@@ -1,0 +1,233 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+	<p:dialog widgetVar="dlg_car_027" id="dlg_car_027" responsive="true"
+		height="500px" appendTo="@(body)" resizable="false">
+		<f:facet name="header">
+			<h:outputLabel value="Realizar Pagos " />
+		</f:facet>
+		<h:form id="frm_car_027">
+			<p:growl autoUpdate="true"></p:growl>
+			<div class="ui-g ui-fluid">
+				<div class="ui-g-12 ui-lg-6">
+					<div class="card card-w-title">
+						<H2>Información de Cliente</H2>
+						<p:panelGrid columns="4" layout="grid" style="width:100%"
+							styleClass="ui-panelgrid-blank form-group">
+							<h:panelGroup styleClass="md-inputfield">
+								<p:inputText readonly="true"
+									value="#{agendamientoBn.agendaDepositoSeleccionado.facturaCartera.cliente.persona.identificacionPersona}"></p:inputText>
+								<label>Identificación</label>
+							</h:panelGroup>
+							<h:panelGroup styleClass="md-inputfield">
+								<p:inputText readonly="true"
+									value="#{agendamientoBn.agendaDepositoSeleccionado.facturaCartera.cliente.persona.nombreCompleto}"></p:inputText>
+								<label>Razon Social</label>
+							</h:panelGroup>
+							<h:panelGroup styleClass="md-inputfield">
+								<p:inputText readonly="true"
+									value="#{agendamientoBn.agendaDepositoSeleccionado.facturaCartera.cliente.persona.telefonoConvencional}"></p:inputText>
+								<label>Teléfono</label>
+							</h:panelGroup>
+							<h:panelGroup styleClass="md-inputfield">
+								<p:inputText readonly="true"
+									value="#{agendamientoBn.agendaDepositoSeleccionado.facturaCartera.cliente.persona.email}"></p:inputText>
+								<label>Correo</label>
+							</h:panelGroup>
+						</p:panelGrid>
+					</div>
+				</div>
+				<div class="ui-g-12 ui-lg-6">
+					<div class="card card-w-title">
+						<H2>Información de Factura</H2>
+						<p:panelGrid columns="4" layout="grid" style="width:100%"
+							styleClass="ui-panelgrid-blank form-group">
+							<h:panelGroup styleClass="md-inputfield">
+								<p:inputText readonly="true"
+									value="#{agendamientoBn.agendaDepositoSeleccionado.facturaCartera.nroFactura}"></p:inputText>
+								<label>Nro. Factura</label>
+							</h:panelGroup>
+							<h:panelGroup styleClass="md-inputfield">
+								<p:inputText readonly="true"
+									value="#{agendamientoBn.agendaDepositoSeleccionado.facturaCartera.fechaEmision}">
+									<f:convertDateTime pattern="dd-MM-yyyy" />
+								</p:inputText>
+								<label>Emisión</label>
+							</h:panelGroup>
+							<h:panelGroup styleClass="md-inputfield">
+								<p:inputText readonly="true"
+									value="#{agendamientoBn.agendaDepositoSeleccionado.facturaCartera.fechaVencimiento}">
+									<f:convertDateTime pattern="dd-MM-yyyy" />
+								</p:inputText>
+								<label>Vencimiento</label>
+							</h:panelGroup>
+							<h:panelGroup styleClass="md-inputfield">
+								<p:inputText readonly="true"
+									value="#{agendamientoBn.agendaDepositoSeleccionado.facturaCartera.valorTotal}">
+									<f:convertNumber pattern="#,##0.00" />
+								</p:inputText>
+								<label>Valor</label>
+							</h:panelGroup>
+						</p:panelGrid>
+					</div>
+				</div>
+				<div class="ui-g-12 ui-lg-12">
+					<f:facet name="title">
+						<div align="center">
+							<p:graphicImage value="/resources/images/iconos/pago1.png" />
+						</div>
+						<p:outputLabel style="font-weight: bold">Realizar Pago</p:outputLabel>
+					</f:facet>
+					<div class="ui-g ui-fluid">
+						<div class="ui-g-12 ui-lg-9">
+							<p:dataTable reflow="true" tableStyle="table-layout:auto"
+								id="dtPago" paginator="true" rows="5" paginatorPosition="bottom"
+								emptyMessage="No existen Facturas " responsive="true"
+								value="#{agendamientoBn.agendaDepositoSeleccionado.facturaCartera.facturaCarteraDetalle}"
+								var="facturaCarteraDetalle"
+								rowKey="#{facturaCarteraDetalle.idFacturaCarteraDetalle}">
+								<f:facet name="header">
+                                          Facturas Emitidas
+                                        </f:facet>
+								<p:column headerText="Secuencia">
+									<h:outputText value="#{facturaCarteraDetalle.secuencia}" />
+								</p:column>
+								<p:column headerText="Fecha de emisión">
+									<h:outputText value="#{facturaCarteraDetalle.fechaEmision}">
+										<f:convertDateTime pattern="dd-MM-yyyy" />
+									</h:outputText>
+								</p:column>
+								<p:column headerText="Fecha de vencimiento">
+									<h:outputText value="#{facturaCarteraDetalle.fechaEmision}">
+										<f:convertDateTime pattern="dd-MM-yyyy" />
+									</h:outputText>
+								</p:column>
+								<p:column headerText="Valor total ">
+									<h:outputText value="#{facturaCarteraDetalle.valorTotal}" />
+								</p:column>
+								<p:column headerText="Valor pagado">
+									<h:outputText value="#{facturaCarteraDetalle.valorPagado}" />
+								</p:column>
+								<p:column headerText="Forma de pago">
+									<p:selectOneMenu converter="#{parametrosConverter}"
+										disabled="#{facturaCarteraDetalle.valorSaldo le 0}"
+										value="#{facturaCarteraDetalle.formaPago}">
+										<f:selectItems value="#{agendamientoBn.listaFormaPago}"
+											var="fp" itemLabel="#{fp.nombreLista}" itemValue="#{fp}"></f:selectItems>
+										<p:ajax process="@this" event="change"></p:ajax>
+									</p:selectOneMenu>
+								</p:column>
+								<p:column headerText="Detalle">
+									<p:commandButton icon="fa fa-navicon" update=":frm_detalle"
+										oncomplete="PF('dlg_detalle').show()"
+										action="#{agendamientoBn.cargarDetalle(facturaCarteraDetalle)}"
+										disabled="#{facturaCarteraDetalle.valorSaldo le 0}"
+										title="Detalle de pago"></p:commandButton>
+								</p:column>
+								<p:column headerText="Valor a pagar">
+									<p:inputNumber value="#{facturaCarteraDetalle.pago}"
+										decimalPlaces="2"
+										maxValue="#{facturaCarteraDetalle.valorSaldo}" minValue="0"
+										rendered="#{facturaCarteraDetalle.valorSaldo > 0}">
+										<p:ajax event="change" process="@this"
+											listener="#{agendamientoBn.valorTotal()}"
+											update="frm_car_027:total,frm_car_027:dtPago"></p:ajax>
+									</p:inputNumber>
+									<p:commandButton icon="fa fa-check"
+										rendered="#{facturaCarteraDetalle.valorSaldo eq 0}"> Valor Cancelado </p:commandButton>
+								</p:column>
+							</p:dataTable>
+						</div>
+						<div class="ui-g-12 ui-lg-3">
+							<div class="card card-w-title">
+								<div style="text-align: center">
+									<h2 style="color: red;font-weight: bold">Valor agendado</h2>
+									<h1 style="color: red;font-weight: bold">
+										<p:outputLabel
+											value="#{agendamientoBn.agendaDepositoSeleccionado.valor}">
+											<f:convertNumber pattern="#,##0.00" />
+										</p:outputLabel>
+									</h1>
+									<p:separator></p:separator>
+									<h2>Valor a pagar</h2>
+								</div>
+								<p:panelGrid columns="1" layout="grid" style="width:100%"
+									id="total" styleClass="ui-panelgrid-blank form-group">
+									<h:panelGroup styleClass="md-inputfield">
+										<p:inputNumber readonly="true" value="#{agendamientoBn.total}">
+										</p:inputNumber>
+										<label>$</label>
+									</h:panelGroup>
+									<h:panelGroup>
+										<p:commandButton icon="fa fa-usd" value="Generar Pago"
+											onclick="PF('dlg_conf').show()"></p:commandButton>
+									</h:panelGroup>
+								</p:panelGrid>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</h:form>
+		<p:dialog widgetVar="dlg_detalle" id="dlg_detalle" responsive="true"
+			appendTo="@(body)" resizable="false" hideEffect="scale">
+			<f:facet name="header">
+				<h:outputLabel value="Detalle de pago" />
+			</f:facet>
+			<h:form id="frm_detalle">
+				<div class="ui-g ui-fluid">
+					<div class="ui-g-12 ui-lg-12">
+						<div class="card">
+							<p:panelGrid columns="1" layout="grid" style="width:100%"
+								styleClass="ui-panelgrid-blank form-group">
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText
+										value="#{agendamientoBn.facturaCarteraDetalleSeleccionada.nroRecibo}">
+										<p:ajax event="change" process="@this"></p:ajax>
+									</p:inputText>
+									<label>Número de Recibo/Cheque</label>
+								</h:panelGroup>
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText
+										value="#{agendamientoBn.facturaCarteraDetalleSeleccionada.observacion}">
+										<p:ajax event="change" process="@this"></p:ajax>
+									</p:inputText>
+									<label>Observación</label>
+								</h:panelGroup>
+								<h:panelGroup>
+									<p:fileUpload label="Cargar Anexo"
+										styleClass="fileupload-simple" mode="advanced" auto="true"
+										style="width:100% !important" update="frm_detalle"
+										fileUploadListener="#{agendamientoBn.cargarFile}" />
+									<div style="text-align: center">
+										<p:outputLabel style="font-weight: bold"
+											value="#{agendamientoBn.facturaCarteraDetalleSeleccionada.nombreArchivo}" />
+									</div>
+								</h:panelGroup>
+							</p:panelGrid>
+						</div>
+					</div>
+				</div>
+			</h:form>
+		</p:dialog>		
+		<p:confirmDialog widgetVar="dlg_conf" header="Confirmar"
+			appendTo="@(body)" message="Esta segur@ que desea registrar el pago"
+			severity="alert" closeOnEscape="true" showEffect="fade"
+			hideEffect="fade">
+			<div align="center">
+				<p:commandButton styleClass="ui-confirmdialog-no"
+					icon="ui-icon-close" value="Cancelar" immediate="true"
+					oncomplete="PF('dlg_conf').hide()"></p:commandButton>
+				<p:commandButton value="Aceptar" styleClass="ui-confirmdialog-yes"
+					immediate="true" icon="ui-icon-check"
+					update=":frm_car_025,:frm_car_rpt_005"
+					oncomplete="PF('dlg_conf').hide(), PF('dlg_car_027').hide(), PF('dlg_car_rpt_005').show()"
+					action="#{agendamientoBn.generarPago()}" process="@this"></p:commandButton>
+			</div>
+		</p:confirmDialog>
+		<ui:include src="/pages/reporte/cartera/car_rpt_005.xhtml" />
+	</p:dialog>
+</ui:composition>

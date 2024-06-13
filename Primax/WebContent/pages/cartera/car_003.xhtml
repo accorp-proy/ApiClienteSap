@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="/WEB-INF/template.xhtml">
+	<ui:define name="content">
+		<h:form id="frm_car_003">
+			<p:growl autoUpdate="false" id="msg"></p:growl>
+			<p:panelGrid id="pnl_00" styleClass="fullSize" columns="2"
+				columnClasses="ui-grid-col-2,ui-grid-col-2" layout="grid">
+				<f:facet name="header">
+					<p:row>
+						<p:column>
+							<div align="left">
+								<p:outputLabel value="Migración "></p:outputLabel>
+								<p:outputLabel value="car_003.xhtml"
+									rendered="#{appMain.usuario.idUsuario eq 1}"></p:outputLabel>
+							</div>
+						</p:column>
+						<p:column>
+							<div align="right">
+								<p:inputText id="inpBusqueda"
+									value="#{migracionCarteraCobrazaBn.condicion}"></p:inputText>
+								<p:commandButton title="Buscar"
+									action="#{migracionCarteraCobrazaBn.buscar()}"
+									update="dtbDiseno" icon="ui-icon-search" styleClass="secondary"></p:commandButton>
+								<p:commandButton title="Nuevo" update=":frm_car_004"
+									action="#{migracionCarteraCobrazaBn.nuevo()}"
+									oncomplete="PF('dlg_car_004').show()"
+									icon="ui-icon-open-in-new" styleClass="secondary"></p:commandButton>
+							</div>
+						</p:column>
+					</p:row>
+				</f:facet>
+			</p:panelGrid>
+			<p:dataTable id="dtbDiseno" paginator="true" rows="8"
+				paginatorPosition="bottom" style="margin-bottom:10px" reflow="true"
+				value="#{migracionCarteraCobrazaBn.migracionesCartera}"
+				emptyMessage="Registro no encontrado" var="migracion">
+				<p:column headerText="Fecha Generación">
+					<h:outputText value="#{migracion.fechaGeneracion}" />
+				</p:column>
+				<p:column headerText="Usuario Responsable">
+					<h:outputText value="#{migracion.usuarioRegistra.nombreUsuario}" />
+				</p:column>
+				<p:column headerText="Tiempo Estimado">
+					<h:outputText value="0.10 Segundos" />
+				</p:column>
+				<p:column headerText="Estado">
+					<h:outputText value="#{migracion.estado.descripcion}"></h:outputText>
+				</p:column>
+				<p:column headerText="Acción" style="width:60px">
+					<div align="center">
+						<p:commandButton icon="ui-icon-update" styleClass="secondary"
+							update=":frm_car_004"
+							action="#{migracionCarteraCobrazaBn.modificar(migracion)}"
+							oncomplete="PF('dlg_car_004').show()" title="Editar"></p:commandButton>
+					</div>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+		<ui:include src="/pages/cartera/car_004.xhtml" />
+	</ui:define>
+</ui:composition>

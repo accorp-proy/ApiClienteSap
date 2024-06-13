@@ -1,0 +1,25 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:jr="http://jasperreportjsf.sf.net/tld/jasperreports-jsf-1_3.tld">
+	<p:dialog widgetVar="dlg_car_rpt_005" modal="true" id="dlg_car_rpt_005"
+		appendTo="@(body)" resizable="false" hideEffect="drop"
+		closeOnEscape="true" showHeader="true" height="500" closable="true"
+		width="800" responsive="true">
+		<f:facet name="header">
+			<h:outputText value="Comprobante de Pago" />
+		</f:facet>
+		<h:form id="frm_car_rpt_005">
+			<p:panel style="width:100%;height:100%"
+				toggleTitle="Comprobante de Pago"
+				rendered="#{agendamientoBn.facturaPagoCarteraSeleccionado.idFacturaPagoCartera!=null}">
+				<iframe height="450px" width="100%"
+					src="#{request.contextPath}/reporte?rptid=3&amp;p1=#{agendamientoBn.facturaPagoCarteraSeleccionado.idFacturaPagoCartera}"></iframe>
+			</p:panel>
+		</h:form>
+	</p:dialog>
+</ui:composition>

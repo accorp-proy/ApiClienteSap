@@ -1,0 +1,43 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<p:dialog responsive="true" widgetVar="dlg_inv_002" id="dlg_inv_002"
+		appendTo="@(body)">
+		<f:facet name="header">
+			<h:outputLabel value="Ingreso Bodega " />
+			<p:outputLabel value="inv_002.xhtml"
+				rendered="#{appMain.usuario.idUsuario eq 1}"></p:outputLabel>
+		</f:facet>
+		<h:form id="frm_inv_002">
+			<div align="left">
+				<p:commandButton icon="ui-icon-save" update=":frm_inv_001"
+					styleClass="secondary" action="#{BodegaBn.guardar()}"
+					title="Guardar">
+				</p:commandButton>
+			</div>
+			<div class="ui-g-12 ui-lg-12 ui-md-12">
+				<p:panelGrid layout="grid" columns="1"
+					styleClass="ui-panelgrid-blank form-group">
+					<h:panelGroup styleClass="md-inputfield">
+						<p:inputText value="#{BodegaBn.bodegaSeleccionada.codigo}"
+							title="Ingrese Código Bodega" maxlength="20" />
+						<label>Código</label>
+					</h:panelGroup>
+					<p:outputLabel></p:outputLabel>
+					<h:panelGroup styleClass="md-inputfield">
+						<p:inputText value="#{BodegaBn.bodegaSeleccionada.descripcion}"
+							title="Ingrese Nombre o Descripción" maxlength="100" />
+						<label>Descripción</label>
+					</h:panelGroup>
+					<h:panelGroup styleClass="md-inputfield">
+						<p:inputTextarea value="#{BodegaBn.bodegaSeleccionada.direccion}"
+							title="Ingrese Dirección " maxlength="150" />
+						<label>Dirección</label>
+					</h:panelGroup>
+				</p:panelGrid>
+			</div>
+		</h:form>
+	</p:dialog>
+</ui:composition>

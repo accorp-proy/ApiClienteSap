@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="/WEB-INF/template.xhtml">
+	<ui:define name="content">
+		<h:form id="frm_car_045">
+			<p:growl autoUpdate="false" id="msg"></p:growl>
+			<p:toolbar>
+				<f:facet name="left">
+					<p:outputLabel value="Consulta Cartera "></p:outputLabel>
+					<p:outputLabel value="car_046.xhtml"
+						rendered="#{appMain.usuario.idUsuario eq 1}"></p:outputLabel>
+					<span class="ui-separator"> <span
+						class="ui-icon ui-icon-grip-dotted-vertical" />
+					</span>
+				</f:facet>
+				<f:facet name="right">
+					<p:commandButton icon="ui-icon-border-clear"
+						title="Limpiar Filtros"
+						action="#{migracionLogCarteraBn.limpiarFiltros()}"
+						update="frm_car_045"></p:commandButton>
+				</f:facet>
+			</p:toolbar>
+			<div class="ui-g ui-fluid">
+				<div class="ui-g-12 ui-lg-12">
+					<div class="card">
+						<p:panelGrid columns="4" layout="grid" style="width:100%"
+							styleClass="ui-panelgrid-blank form-group">
+							<h:panelGroup styleClass="md-inputfield">
+								<p:inputText id="inpNombreCliente" value="#{migracionLogCarteraBn.condicion}"
+									style="width:80%"></p:inputText>
+								<label>Código JDE/Nro Comprobante</label>
+							</h:panelGroup>
+							<h:panelGroup>
+								<p:selectOneMenu converter="#{empresaConverter}"
+									value="#{migracionLogCarteraBn.empresaSeleccionada}">
+									<f:selectItem itemLabel="Empresa" />
+									<f:selectItems value="#{migracionLogCarteraBn.empresas}"
+										var="empresa" itemLabel="#{empresa.descripcion}"
+										itemValue="#{empresa}"></f:selectItems>
+								</p:selectOneMenu>
+							</h:panelGroup>
+							<p:commandButton title="Buscar"
+								action="#{migracionLogCarteraBn.buscar()}"
+								update="dtbFacturaCartera" icon="ui-icon-search"
+								styleClass="secondary"></p:commandButton>
+						</p:panelGrid>
+					</div>
+				</div>
+			</div>
+			<p:dataTable id="dtbFacturaCartera" paginator="true" rows="8"
+				tableStyle="table-layout:auto" paginatorPosition="bottom"
+				style="margin-bottom:10px" reflow="true"
+				value="#{migracionLogCarteraBn.logMigracion}"
+				emptyMessage="Registro no encontrado" var="log"
+				rowKey="#{log.idLogMigracion}">
+				<f:facet name="header">
+					<h:outputText value="Log Migración" />
+				</f:facet>
+				<p:column headerText="Empresa">
+					<h:outputText value="#{log.empresa}" />
+				</p:column>
+				<p:column headerText="Referencia">
+					<h:outputText value="#{log.proceso}" />
+				</p:column>
+				<p:column headerText="Descripción Error">
+					<h:outputText value="#{log.descripcion}" />
+				</p:column>
+				<p:column headerText="Código JDE">
+					<h:outputText value="#{log.codigoJde}" />
+				</p:column>
+				<p:column headerText="Nro Comprobante">
+					<h:outputText value="#{log.nroDocumento}" />
+				</p:column>
+			</p:dataTable>
+		</h:form>
+	</ui:define>
+</ui:composition>

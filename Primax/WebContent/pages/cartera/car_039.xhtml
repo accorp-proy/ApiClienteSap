@@ -1,0 +1,54 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+	<p:dialog widgetVar="dlg_car_039" id="dlg_car_039" responsive="true"
+		appendTo="@(body)" resizable="false" hideEffect="scale"
+		position="center">
+		<f:facet name="header">
+			<h:outputLabel value="Busqueda Cliente " />
+			<p:outputLabel value="car_016.xhtml"
+				rendered="#{appMain.usuario.idUsuario eq 1}"></p:outputLabel>
+		</f:facet>
+		<h:form id="frm_car_039">
+			<p:growl autoUpdate="true"></p:growl>
+			<div class="ui-fluid">
+				<p:panelGrid id="pnlGrid_02" columns="2"
+					columnClasses="ui-grid-col-12" layout="grid"
+					styleClass="ui-panelgrid-blank">
+					<p:inputText title="Nombre/Identificación " maxlength="20"
+						placeholder="Nombre/Identificación"
+						value="#{estadoClienteCarteraBn.condicionCliente}" />
+					<p:commandButton icon="ui-icon-search" update="dtbCliente"
+						action="#{estadoClienteCarteraBn.buscarCliente()}"></p:commandButton>
+				</p:panelGrid>
+			</div>
+			<p:dataTable id="dtbCliente" paginator="true" rows="4"
+				tableStyle="table-layout:auto" paginatorPosition="bottom"
+				style="margin-bottom:10px" reflow="true"
+				value="#{estadoClienteCarteraBn.clientes}" var="cliente"
+				rowKey="#{cliente.idCliente}"
+				selection="#{estadoClienteCarteraBn.clienteSeleccionado}"
+				selectionMode="single">
+				<p:ajax event="rowSelect" process="@this dtbCliente"
+					oncomplete="PF('dlg_car_039').hide()" immediate="true"
+					update=":frm_car_036:inpNombreCliente"></p:ajax>
+				<p:column headerText="Identificación">
+					<p:outputLabel value="#{cliente.persona.identificacionPersona}"></p:outputLabel>
+				</p:column>
+				<p:column headerText="Código Cliente JDE">
+					<p:outputLabel value="#{cliente.idClienteJDE}"></p:outputLabel>
+				</p:column>
+				<p:column headerText="Nombre">
+					<p:outputLabel value="#{cliente.nombreAlfa}"></p:outputLabel>
+				</p:column>
+				<p:column headerText="Compañia Virtual">
+					<p:outputLabel value="#{cliente.companiaVirtual.descripcion}"></p:outputLabel>
+				</p:column>
+			</p:dataTable>
+
+		</h:form>
+	</p:dialog>
+</ui:composition>

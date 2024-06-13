@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptHistorialGestionCliente" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="89e0eb21-bf3f-47c7-89c8-097e60faa7ce">
+	<property name="ireport.zoom" value="3.0"/>
+	<property name="ireport.x" value="618"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="par_id_factura_cartera" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select
+ges.id_gestion_cliente_cartera as idGestionClienteCartera,
+ges.id_factura_cartera as idFacturaCartera,
+ges.id_cliente as idCliente,
+' '||ges.lugar_visita as lugarVisita,
+ges.fecha_gestion as fechaGestion,
+ges.hora_gestion as horaGestion,
+ges.contesto ,
+ges.acuerdo_pago as acuerdoPago,
+' '||ges.observacion  as observacion
+from gestion_cliente_cartera_et ges
+where ges.id_factura_cartera  = $P{par_id_factura_cartera}
+and   ges.tipo_gestion_cartera = 'VISITA']]>
+	</queryString>
+	<field name="idgestionclientecartera" class="java.lang.Long"/>
+	<field name="idfacturacartera" class="java.lang.Long"/>
+	<field name="idcliente" class="java.lang.Long"/>
+	<field name="lugarvisita" class="java.lang.String"/>
+	<field name="fechagestion" class="java.sql.Timestamp"/>
+	<field name="horagestion" class="java.sql.Timestamp"/>
+	<field name="contesto" class="java.lang.String"/>
+	<field name="acuerdopago" class="java.lang.String"/>
+	<field name="observacion" class="java.lang.String"/>
+	<variable name="valortotal_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[]]></variableExpression>
+	</variable>
+	<variable name="idcliente_1" class="java.lang.Long" calculation="Sum">
+		<variableExpression><![CDATA[$F{idcliente}]]></variableExpression>
+	</variable>
+	<variable name="idcliente_2" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$F{idcliente}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="30" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="555" height="15" backcolor="#FF6600" uuid="ae308cec-62fe-4f8b-b8c5-315b80127cfb"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[GESTION VISITA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="15" width="100" height="15" backcolor="#FF6600" uuid="c296e0ea-1c24-457e-b287-4629f7f904a1"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ Lugar Visita]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="100" y="15" width="80" height="15" backcolor="#FF6600" uuid="c98f2d80-608f-4c05-b092-6bd59049269c"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ Fecha Gestión]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="180" y="15" width="80" height="15" backcolor="#FF6600" uuid="cfda29c2-2497-43bb-9109-b7c142fcbc7a"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ Hora Gestión]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="260" y="15" width="45" height="15" backcolor="#FF6600" uuid="ac061d6a-06ad-4c12-aa2c-50cd28698f5f"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Conesto]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="305" y="15" width="75" height="15" backcolor="#FF6600" uuid="6e55baa3-ab4e-4123-964a-c6c3f822bd61"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[LLego Acuerdo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="380" y="15" width="175" height="15" backcolor="#FF6600" uuid="9fcaf7f3-cc86-4953-8ac8-9c769433eba5"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Observación]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="100" y="0" width="80" height="15" uuid="d7999488-7e58-4cca-b8cb-956cf0e08bb6"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fechagestion}]]></textFieldExpression>
+			</textField>
+			<textField pattern="h.mm a" isBlankWhenNull="true">
+				<reportElement x="180" y="0" width="80" height="15" uuid="646267dc-843e-4c9f-8434-c51a88c9a083"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{horagestion}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="260" y="0" width="45" height="15" uuid="7f702422-af46-4cef-a3ee-c5144668f920"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{contesto}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="305" y="0" width="75" height="15" uuid="98ba16a2-d278-4632-854f-4d505dbe7f44"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{acuerdopago}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="380" y="0" width="175" height="15" uuid="32924a10-12ef-4bc5-8abe-f3cec574de08"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{observacion}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="100" height="15" uuid="4b3273af-030b-4732-b6b8-4b5e19faeaf3"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{lugarvisita}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="22" splitType="Stretch">
+			<staticText>
+				<reportElement x="430" y="7" width="75" height="15" forecolor="#000000" uuid="0faf9ddc-1906-4a99-aa4b-ce31bb3794a8"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="505" y="7" width="50" height="15" uuid="457add08-3924-45f2-a54d-36f7e71660c9"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{idcliente_2}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

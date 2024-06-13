@@ -1,0 +1,49 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+	<p:dialog widgetVar="dlg_car_018" id="dlg_car_018" responsive="true"
+		appendTo="@(body)" resizable="false" hideEffect="scale">
+		<f:facet name="header">
+			<h:outputLabel value="Busqueda Cliente " />
+			<p:outputLabel value="car_018.xhtml"
+				rendered="#{appMain.usuario.idUsuario eq 1}"></p:outputLabel>
+		</f:facet>
+		<h:form id="frm_car_018">
+			<p:growl autoUpdate="true"></p:growl>
+			<div class="ui-fluid">
+				<p:panelGrid id="pnlGrid_02" columns="2"
+					columnClasses="ui-grid-col-10,ui-grid-col-2" layout="grid"
+					styleClass="ui-panelgrid-blank">
+					<p:inputText title="Nombre/Identificación " maxlength="20"
+						placeholder="Nombre/Identificación"
+						value="#{gestionCobranzaBn.condicionCliente}" />
+					<p:commandButton icon="ui-icon-search" update="dtbCliente"
+						action="#{gestionCobranzaBn.buscarCliente()}"></p:commandButton>
+				</p:panelGrid>
+			</div>
+			<p:dataTable id="dtbCliente" value="#{gestionCobranzaBn.clientes}"
+				var="cliente" paginator="true" rowKey="#{cliente.idCliente}"
+				reflow="true" styleClass="fullSize" rows="4"
+				tableStyle="table-layout:auto"
+				selection="#{gestionCobranzaBn.clienteSeleccionado}"
+				selectionMode="single">
+				<p:ajax event="rowSelect" process="@this dtbCliente"
+					oncomplete="PF('dlg_car_018').hide()" immediate="true"
+					update=":frm_car_017:inpNombreCliente"></p:ajax>
+				<p:column headerText="Identificación">
+					<p:outputLabel value="#{cliente.persona.identificacionPersona}"></p:outputLabel>
+				</p:column>
+				<p:column headerText="Nombre">
+					<p:outputLabel value="#{cliente.persona.nombreCompleto}"></p:outputLabel>
+				</p:column>
+				<p:column headerText="Correo">
+					<p:outputLabel value="#{cliente.persona.email}"></p:outputLabel>
+				</p:column>
+			</p:dataTable>
+
+		</h:form>
+	</p:dialog>
+</ui:composition>

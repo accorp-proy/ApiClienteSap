@@ -1,0 +1,50 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+	<ui:define name="content">
+		<h:form id="frm_car_rpt_004">
+
+			<p:fieldset legend="Filtros de búsqueda" toggleable="true"
+				toggleSpeed="500">
+				<div class="ui-g ui-fluid">
+					<div class="ui-g-12 ui-lg-12">
+						<div class="card">
+
+							<p:panelGrid columns="4" layout="grid" style="width:100%"
+								styleClass="ui-panelgrid-blank form-group">
+								<h:panelGroup styleClass="md-inputfield">
+									<p:calendar value="#{BusquedaBn.fechaSeleccionadaDesde}"
+										pattern="dd-MM-yyyy" showOn="button">
+										<p:ajax event="dateSelect" process="@this"></p:ajax>
+									</p:calendar>
+									<label>Fecha desde</label>
+								</h:panelGroup>
+								<h:panelGroup styleClass="md-inputfield">
+									<p:calendar value="#{BusquedaBn.fechaSeleccionadaHasta}"
+										pattern="dd-MM-yyyy" showOn="button">
+										<p:ajax event="dateSelect" process="@this"></p:ajax>
+									</p:calendar>
+									<label>Fecha hasta</label>
+								</h:panelGroup>
+								<div align="right">
+									<p:commandButton icon="ui-icon-picture-as-pdf" update="pnl_rep"
+										process="@this " ajax="false" immediate="true"
+										action="#{ReporteBn.imprimirPdf()}"></p:commandButton>
+								</div>
+							</p:panelGrid>
+						</div>
+					</div>
+				</div>
+				<p:panelGrid id="pnl_rep" styleClass="sinborde" style="width:100%">
+					<p:column>
+						<iframe height="480px" width="100%"
+							src="#{request.contextPath}/reporte?rptid=11&amp;p1=#{appMain.usuario.nombreUsuario.toString()}&amp;p2=#{BusquedaBn.fechaDesdeTexto}&amp;p3=#{BusquedaBn.fechaHastaTexto}"></iframe>
+					</p:column>
+				</p:panelGrid>
+			</p:fieldset>
+		</h:form>
+	</ui:define>
+</ui:composition>

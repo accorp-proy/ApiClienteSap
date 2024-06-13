@@ -1,0 +1,57 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+	<p:dialog widgetVar="dlg_car_020" id="dlg_car_020" responsive="true"
+		appendTo="@(body)" resizable="false">
+		<f:facet name="header">
+			<h:outputLabel value="Pagos Realizados " />
+			<p:outputLabel value="car_020.xhtml"></p:outputLabel>
+		</f:facet>
+		<h:form id="frm_car_020">
+			<p:dataTable reflow="true" tableStyle="table-layout:auto"
+				paginator="true" rows="3" paginatorPosition="bottom"
+				emptyMessage="No existen Pagos " responsive="true"
+				value="#{gestionCobranzaBn.facturaCarteraDetalleSeleccionada.pagoCarteraDetalle}"
+				var="pagoCarteraDetalle" rowKey="#{pagoCarteraDetalle.idPagoCarteraDetalle}">
+				<f:facet name="header">
+            Pagos Realizados
+        </f:facet>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Secuencia" />
+					</f:facet>
+					<h:outputText value="#{pagoCartera.secuencia}">
+						<f:convertDateTime pattern="dd-MM-yyyy" />
+					</h:outputText>
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Número Recibo" />
+					</f:facet>
+					<h:outputText value="#{pagoCartera.nroRecibo}">
+						<f:convertDateTime pattern="dd-MM-yyyy" />
+					</h:outputText>
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Fecha Pago" />
+					</f:facet>
+					<h:outputText value="#{pagoCartera.fechaPago}">
+						<f:convertDateTime pattern="dd-MM-yyyy" />
+					</h:outputText>
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Valor Pagado" />
+					</f:facet>
+					<h:outputText value="#{pagoCartera.valor}" >
+					<f:convertNumber pattern="#,##0.00" />
+					</h:outputText>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+	</p:dialog>
+</ui:composition>

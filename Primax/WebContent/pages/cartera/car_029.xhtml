@@ -1,0 +1,287 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="/WEB-INF/template.xhtml">
+	<ui:define name="content">
+		<h:form id="frm_car_029">
+			<p:growl autoUpdate="false" id="msg"></p:growl>
+			<p:toolbar>
+				<f:facet name="left">
+					<p:outputLabel value="Estado de Cliente"></p:outputLabel>
+					<span class="ui-separator"> <span
+						class="ui-icon ui-icon-grip-dotted-vertical" />
+					</span>
+				</f:facet>
+				<f:facet name="right">
+					<p:commandButton title="Buscar Estado de Cliente"
+						update="frm_car_029" action="#{estadoClienteBn.buscar()}"
+						icon="ui-icon-search" styleClass="secondary"></p:commandButton>
+					<span style="width: 20"></span>
+					<p:commandButton title="Actualizar Estado de Cliente"
+						icon="fa fa-refresh"></p:commandButton>
+				</f:facet>
+			</p:toolbar>
+			<div class="ui-g ui-fluid">
+				<div class="ui-g-12 ui-lg-12">
+					<div class="card">
+						<p:panelGrid columns="4" layout="grid" style="width:100%"
+							styleClass="ui-panelgrid-blank form-group">
+							<h:panelGroup styleClass="md-inputfield">
+								<p:inputText id="inpNombreCliente" readonly="true"
+									style="width:80%"
+									value="#{estadoClienteBn.personaSeleccionada.nombreCompleto}"></p:inputText>
+								<p:commandButton icon="ui-icon-search" update=":frm_car_030"
+									oncomplete="PF('dlg_car_030').show()" title="Buscar Cliente"></p:commandButton>
+								<label>Cliente</label>
+							</h:panelGroup>
+							<h:panelGroup>
+								<p:selectOneMenu converter="#{empresaConverter}"
+									value="#{estadoClienteBn.empresaSeleccionada}">
+									<f:selectItem itemLabel="Empresa" />
+									<f:selectItems value="#{estadoClienteBn.empresas}"
+										var="empresa" itemLabel="#{empresa.descripcion}"
+										itemValue="#{empresa}"></f:selectItems>
+								</p:selectOneMenu>
+							</h:panelGroup>
+							<h:panelGroup styleClass="md-inputfield">
+								<p:calendar value="#{estadoClienteBn.fechaDesde}"
+									pattern="dd-MM-yyyy" showOn="button">
+									<p:ajax event="dateSelect" process="@this"></p:ajax>
+								</p:calendar>
+								<label>Fecha desde</label>
+							</h:panelGroup>
+							<h:panelGroup styleClass="md-inputfield">
+								<p:calendar value="#{estadoClienteBn.fechaHasta}"
+									pattern="dd-MM-yyyy" showOn="button">
+									<p:ajax event="dateSelect" process="@this"></p:ajax>
+								</p:calendar>
+								<label>Fecha hasta</label>
+							</h:panelGroup>
+						</p:panelGrid>
+					</div>
+				</div>
+				<div class="ui-g-12 ui-lg-3">
+					<div class="card">
+						<p:panelGrid columns="1" layout="grid" style="width:100%"
+							styleClass="ui-panelgrid-blank form-group">
+							<h:panelGroup styleClass="md-inputfield">
+								<p:inputText readonly="true" style="width:100%"
+									value="#{estadoClienteBn.personaSeleccionada.identificacionPersona}"></p:inputText>
+								<label>Razón Identificación</label>
+							</h:panelGroup>
+							<h:panelGroup styleClass="md-inputfield">
+								<p:inputTextarea readonly="true" style="width:100%"
+									value="#{estadoClienteBn.personaSeleccionada.nombreCompleto}"></p:inputTextarea>
+								<label>Razón Social</label>
+							</h:panelGroup>
+						</p:panelGrid>
+						<p:menu toggleable="true">
+							<p:submenu label="Consolidado" icon="fa fa-compress ">
+								<p:menuitem value="Consolidado" update="frm_car_029"
+									action="#{estadoClienteBn.cargarConsolidado()}" />
+							</p:submenu>
+							<p:separator />
+							<c:if test="#{estadoClienteBn.listaPrimax.size()>0}">
+								<p:submenu label="Primax" icon="fa fa-industry">
+									<c:forEach items="#{estadoClienteBn.listaPrimax}" var="primax">
+										<p:menuitem
+											value="#{primax.idClienteJDE} - #{primax.companiaVirtual.descripcion}"
+											update="frm_car_029"
+											action="#{estadoClienteBn.cargarCliente(primax)}" />
+									</c:forEach>
+								</p:submenu>
+							</c:if>
+							<c:if test="#{estadoClienteBn.listaAtimasa.size()>0}">
+								<p:submenu label="Atimasa" icon="fa fa-industry">
+									<c:forEach items="#{estadoClienteBn.listaAtimasa}"
+										var="atimasa">
+										<p:menuitem
+											value="#{atimasa.idClienteJDE} - #{atimasa.companiaVirtual.descripcion}"
+											update="frm_car_029"
+											action="#{estadoClienteBn.cargarCliente(atimasa)}" />
+									</c:forEach>
+								</p:submenu>
+							</c:if>
+						</p:menu>
+					</div>
+				</div>
+				<div class="ui-g-12 ui-lg-9">
+					<div class="card" align="center">
+						<p:panelGrid columns="1" layout="grid" style="width:100%"
+							styleClass="ui-panelgrid-blank form-group">
+							<p:outputLabel style="font-weight:bold;font-size:15px"
+								rendered="#{estadoClienteBn.clienteSeleccionada.idCliente != null}"
+								value="CLIENTE: #{estadoClienteBn.clienteSeleccionada.idClienteJDE} - #{estadoClienteBn.clienteSeleccionada.companiaVirtual.descripcion}"></p:outputLabel>
+							<p:outputLabel style="font-weight:bold;font-size:15px"
+								rendered="#{estadoClienteBn.clienteSeleccionada.idCliente == null}"
+								value="CLIENTE: CONSOLIDADO"></p:outputLabel>
+						</p:panelGrid>
+						<p:panelGrid columns="4" layout="grid" style="width:100%"
+							styleClass="ui-panelgrid-blank form-group">
+							<p:commandButton icon="fa fa-usd"
+								action="#{estadoClienteBn.verCredito()}"
+								value="Credito #{estadoClienteBn.valorCupo}"
+								style=" font-weight: bold;" update="frm_car_029"
+								title="$ #{estadoClienteBn.valorCupo}"></p:commandButton>
+							<p:commandButton icon="fa fa-usd"
+								action="#{estadoClienteBn.verFactura()}"
+								value="Facturas #{estadoClienteBn.valorFactura}"
+								style="font-weight: bold"
+								title="$ #{estadoClienteBn.valorFactura}" update="frm_car_029">
+							</p:commandButton>
+							<p:commandButton icon="fa fa-usd"
+								action="#{estadoClienteBn.verPagos()}"
+								value="Pagos #{estadoClienteBn.valorPago}"
+								style=" font-weight: bold;"
+								title="$ #{estadoClienteBn.valorPago}" update="frm_car_029"></p:commandButton>
+							<p:commandButton icon="fa fa-usd"
+								action="#{estadoClienteBn.verConsumos()}"
+								value="Consumos #{estadoClienteBn.valorConsumo}"
+								style=" font-weight: bold;" update="frm_car_029"
+								title="$ #{estadoClienteBn.valorConsumo}"></p:commandButton>
+						</p:panelGrid>
+						<p:chart type="metergauge" style="height:200px"
+							rendered="#{estadoClienteBn.vistaDetalle eq 1}"
+							model="#{estadoClienteBn.meterGaugeModel}"></p:chart>
+						<p:outputPanel rendered="#{estadoClienteBn.vistaDetalle eq 1}">
+							<div class="ui-g dashboard">
+								<div class="ui-g-12 ui-md-6 ui-lg-3" align="center"></div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+									<div
+										class="ui-g card colorbox colorbox-#{estadoClienteBn.colorSaldo}">
+										<div class="ui-g-4">
+											<i class="material-icons">&#xE227;</i>
+										</div>
+										<div class="ui-g-8">
+											<span class="colorbox-name">Saldo</span> <span
+												class="colorbox-count"> <p:outputLabel
+													value="#{estadoClienteBn.valorCupoSaldo}">
+													<f:convertNumber pattern="#,##0.00" />
+												</p:outputLabel>
+											</span>
+										</div>
+									</div>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-3" align="center"></div>
+							</div>
+						</p:outputPanel>
+						<p:dataTable id="dtbFactura" scrollable="true" scrollHeight="250"
+							value="#{estadoClienteBn.listaFacturasCartera}"
+							tableStyle="table-layout:auto" reflow="true"
+							emptyMessage="Registros no encontrados" var="fac"
+							rendered="#{estadoClienteBn.vistaDetalle eq 2}">
+							<f:facet name="header">
+						          Lista de Facturas							
+					            </f:facet>
+							<p:column headerText="Nro. Factura">
+								<p:outputLabel value="#{fac.nroFactura}">
+								</p:outputLabel>
+							</p:column>
+							<p:column headerText="Fecha Emisión">
+								<p:outputLabel value="#{fac.fechaEmision}">
+									<f:convertDateTime pattern="dd-MM-yyyy" />
+								</p:outputLabel>
+							</p:column>
+							<p:column headerText="Fecha Vencimiento">
+								<p:outputLabel value="#{fac.fechaVencimiento}">
+									<f:convertDateTime pattern="dd-MM-yyyy" />
+								</p:outputLabel>
+							</p:column>
+							<p:column headerText="Saldo" style="text-align:right">
+								<p:outputLabel value="#{fac.valorSaldo}">
+									<f:convertNumber pattern="#,##0.00" />
+								</p:outputLabel>
+							</p:column>
+							<p:column headerText="Valor Pagado" style="text-align:right">
+								<p:outputLabel value="#{fac.valorPagado}">
+									<f:convertNumber pattern="#,##0.00" />
+								</p:outputLabel>
+							</p:column>
+							<p:column headerText="Valor Total" style="text-align:right">
+								<p:outputLabel value="#{fac.valorTotal}">
+									<f:convertNumber pattern="#,##0.00" />
+								</p:outputLabel>
+							</p:column>
+						</p:dataTable>
+						<p:dataTable id="dtbPagos" scrollable="true" scrollHeight="250"
+							value="#{estadoClienteBn.listaPagoCartera}"
+							tableStyle="table-layout:auto" reflow="true"
+							emptyMessage="Registros no encontrados" var="pag"
+							rendered="#{estadoClienteBn.vistaDetalle eq 3}">
+							<f:facet name="header">
+						          Lista de Pagos							
+					            </f:facet>
+							<p:column headerText="Secuencia">
+								<p:outputLabel value="#{pag.secuencia}">
+								</p:outputLabel>
+							</p:column>
+							<p:column headerText="Tipo Documento">
+								<p:outputLabel value="#{pag.tipoDocumento}">
+								</p:outputLabel>
+							</p:column>
+							<p:column headerText="Fecha de Pago">
+								<p:outputLabel value="#{pag.fechaPago}">
+									<f:convertDateTime pattern="dd-MM-yyyy" />
+								</p:outputLabel>
+							</p:column>
+							<p:column headerText="Nro. Factura">
+								<p:outputLabel value="#{pag.nroFactura}">
+								</p:outputLabel>
+							</p:column>
+							<p:column headerText="Nro. Recibo">
+								<p:outputLabel value="#{pag.nroRecibo}">
+								</p:outputLabel>
+							</p:column>
+							<p:column headerText="Valor">
+								<p:outputLabel value="#{pag.valor}">
+									<f:convertNumber pattern="#,##0.00" />
+								</p:outputLabel>
+							</p:column>
+						</p:dataTable>
+						<p:dataTable id="dtbConsumo" scrollable="true" scrollHeight="250"
+							value="#{estadoClienteBn.listaConsumoCartera}"
+							tableStyle="table-layout:auto" reflow="true"
+							emptyMessage="Registros no encontrados" var="con"
+							rendered="#{estadoClienteBn.vistaDetalle eq 4}">
+							<f:facet name="header">
+						            Lista de Consumos Corriente									
+					            </f:facet>
+							<p:column headerText="Fecha Emisión">
+								<p:outputLabel value="#{con.fechaEmision}">
+									<f:convertDateTime pattern="dd-MM-yyyy" />
+								</p:outputLabel>
+							</p:column>
+							<p:column headerText="Fecha Vencimiento">
+								<p:outputLabel value="#{con.fechaVencimiento}">
+									<f:convertDateTime pattern="dd-MM-yyyy" />
+								</p:outputLabel>
+							</p:column>
+
+							<p:column headerText="Tipo Documento">
+								<p:outputLabel value="#{con.tipoDocumento.descripcion}">
+									<f:convertDateTime pattern="dd-MM-yyyy" />
+								</p:outputLabel>
+							</p:column>
+							<p:column headerText="Valor Total" style="text-align:right">
+								<p:outputLabel value="#{con.valorTotal}">
+									<f:convertNumber pattern="#,##0.00" />
+								</p:outputLabel>
+							</p:column>
+							<p:column headerText="Valor Pendiente" style="text-align:right">
+								<p:outputLabel value="#{con.valorSaldo}">
+									<f:convertNumber pattern="#,##0.00" />
+								</p:outputLabel>
+							</p:column>
+						</p:dataTable>
+					</div>
+				</div>
+			</div>
+		</h:form>
+		<ui:include src="/pages/cartera/car_030.xhtml" />
+	</ui:define>
+</ui:composition>

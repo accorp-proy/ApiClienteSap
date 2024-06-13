@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+	<p:dialog widgetVar="dialog_001" id="dialog_001" resizable="false"
+		modal="true" hideEffect="drop" closeOnEscape="true">
+		<f:facet name="header">
+			<h:outputText value="Ingreso/Modificación de Licencia [tam_001_1]" />
+		</f:facet>
+		<h:form id="frm_tam_001_1">
+			<p:messages id="msgs" showDetail="true" />
+			<div align="right">
+				<p:commandButton title="Guardar" value="Guardar" icon="fa fa-save"
+					process="frm_tam_001_1" action="#{licenciaBn.guardarLicencia()}"
+					update=":frm_tam_001,:frm_tam_001_1"></p:commandButton>
+			</div>
+			<div class="ui-g ui-fluid">
+				<div class="ui-g-12 ui-lg-12">
+					<div class="card card-w-title">
+						<h2>Datos de Licencia</h2>
+						<p:panelGrid columns="1" layout="grid"
+							styleClass="ui-panelgrid-blank form-group">
+							<h:panelGroup styleClass="md-inputfield">
+								<p:inputText onblur="value=value.toUpperCase()" readonly="#{licenciaBn.licenciaSeleccionada.saldoMillas lt licenciaBn.licenciaSeleccionada.millas}"
+									value="#{licenciaBn.licenciaSeleccionada.licencia}">
+									<p:ajax event="blur"
+										listener="#{licenciaBn.verificarLicencia()}"
+										update="frm_tam_001_1"></p:ajax>
+								</p:inputText>
+								<label>Licencia</label>
+							</h:panelGroup>
+							<h:panelGroup styleClass="md-inputfield">
+								<p:inputNumber value="#{licenciaBn.licenciaSeleccionada.millas}" readonly="#{licenciaBn.licenciaSeleccionada.saldoMillas lt licenciaBn.licenciaSeleccionada.millas}"
+									decimalPlaces="2" />
+								<label>Millas</label>
+							</h:panelGroup>
+							<h:panelGroup styleClass="md-inputfield">
+								<p:calendar navigator="true" pattern="dd/MM/yyyy" disabled="#{licenciaBn.licenciaSeleccionada.saldoMillas lt licenciaBn.licenciaSeleccionada.millas}"
+									value="#{licenciaBn.licenciaSeleccionada.fechaVencimiento}"></p:calendar>
+								<label>Fecha de Vencimiento</label>
+							</h:panelGroup>
+						</p:panelGrid>
+					</div>
+				</div>
+			</div>
+		</h:form>
+	</p:dialog>
+</ui:composition>

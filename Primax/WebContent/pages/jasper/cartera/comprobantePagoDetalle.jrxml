@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="comprobantePagoDetalle" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="992ce1aa-7d78-4a47-9267-bcdad39a9a31">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Promotick"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="id_pago" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select fcd.secuencia,
+       pcd.valor
+         from pago_cartera_detalle_et pcd
+         inner join pago_cartera_comprobante_et pcc
+         on pcc.id_pago_cartera_comprobante = pcd.id_pago_cartera_comprobante
+         inner join factura_cartera_detalle_et fcd
+         on fcd.id_factura_cartera_detalle = pcd.id_factura_cartera_detalle
+       where pcd.id_pago_cartera_comprobante = $P{id_pago}]]>
+	</queryString>
+	<field name="secuencia" class="java.lang.String"/>
+	<field name="valor" class="java.lang.Double"/>
+	<variable name="valor_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{valor}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="13" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="172" height="13" isPrintWhenDetailOverflows="true" uuid="ae96fb0f-9115-4be4-a2f6-2c59965e8e19"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Detalle de factura "+$F{secuencia}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="172" y="0" width="69" height="13" uuid="867d3bd6-8dd1-4d4d-8054-111ac681e16a"/>
+				<box rightPadding="4"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valor}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="20">
+			<staticText>
+				<reportElement mode="Transparent" x="0" y="6" width="172" height="13" forecolor="#000000" backcolor="#FFFFFF" uuid="e001de85-917c-4d4d-89ed-5db850074989"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[VALOR TOTAL]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="6" width="241" height="1" uuid="63994707-0760-4103-a56f-4a6cf28e5add"/>
+			</line>
+			<textField pattern="#,##0.00">
+				<reportElement x="172" y="7" width="69" height="12" uuid="b74ebbb9-f013-4ba8-8bfc-98f7a1acf035"/>
+				<box rightPadding="4"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{valor_1}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

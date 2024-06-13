@@ -1,0 +1,76 @@
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/template.xhtml">
+	<ui:define name="title">Cantones - [par_004]</ui:define>
+	<ui:define name="content">
+		<h:form id="frm_par_004">
+			<p:growl
+				showDetail="false"
+				id="mensajes"></p:growl>
+			<p:toolbar>
+				<f:facet name="left">
+					<p:outputLabel value="Cantones"></p:outputLabel>
+					<span class="ui-separator">
+						<span class="ui-icon ui-icon-grip-dotted-vertical" />
+					</span>
+					<p:commandButton
+						value="Nuevo"
+						title="Nuevo"
+						icon="ui-icon-plus"
+						action="#{cantonBn.nuevoCanton()}"
+						oncomplete="PF('dialog_04_1').show()"
+						update=":dialog_04_1"></p:commandButton>
+				</f:facet>
+				<f:facet name="right">
+					<p:inputText
+						style="text-transform:uppercase"
+						value="#{cantonBn.textoBusqueda}">
+						<p:commandLink
+							action="#{cantonBn.buscar()}"
+							update="dtbCiudad">
+							<i class="fa fa-search"></i>
+						</p:commandLink>
+					</p:inputText>
+				</f:facet>
+			</p:toolbar>
+			<p:dataTable
+				paginator="true"
+				reflow="true"
+				rows="15"
+				tableStyle="table-layout: auto"
+				style="margin-bottom:20px"
+				id="dtbCiudad"
+				emptyMessage="No existe ciudad"
+				value="#{cantonBn.cantones}"
+				var="cant">
+				<p:column headerText="Nombre de provincia">
+					<h:outputText value="#{cant.provincia.nombreProvincia} (#{cant.provincia.inecProvincia})"></h:outputText>
+				</p:column>
+				<p:column headerText="Nombre de ciudad">
+					<h:outputText value="#{cant.nombreCanton} (#{cant.inecCanton})"></h:outputText>
+				</p:column>
+				<p:column headerText="Codigo Inec">
+					<h:outputText value="#{cant.inecCanton}"></h:outputText>
+				</p:column>
+				<p:column
+					headerText="Estado"
+					width="15%">
+					<h:outputText value="#{cant.estado.descripcion}"></h:outputText>
+				</p:column>
+				<p:column width="30">
+					<p:commandButton
+						icon="ui-icon-pencil"
+						title="Editar"
+						action="#{cantonBn.modificaCanton(cant)}"
+						oncomplete="PF('dialog_04_1').show()"
+						update=":frmCiudad"></p:commandButton>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+		<ui:include src="/pages/parametros/par_004_1.xhtml"></ui:include>
+	</ui:define>
+</ui:composition>

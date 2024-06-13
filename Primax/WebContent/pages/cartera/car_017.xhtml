@@ -1,0 +1,170 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="/WEB-INF/template.xhtml">
+	<ui:define name="content">
+		<h:form id="frm_car_017">
+			<p:growl autoUpdate="false" id="msg"></p:growl>
+			<p:toolbar>
+				<f:facet name="left">
+					<p:outputLabel value="Gestión Cobranza "></p:outputLabel>
+					<p:outputLabel value="car_017.xhtml"
+						rendered="#{appMain.usuario.idUsuario eq 1}"></p:outputLabel>
+					<span class="ui-separator"> <span
+						class="ui-icon ui-icon-grip-dotted-vertical" />
+					</span>
+				</f:facet>
+				<f:facet name="right">
+					<p:commandButton icon="ui-icon-border-clear"
+						title="Limpiar Filtros"
+						action="#{gestionCobranzaBn.limpiarFiltros()}"
+						update="frm_car_017"></p:commandButton>
+				</f:facet>
+			</p:toolbar>
+			<div class="ui-g ui-fluid">
+				<div class="ui-g-12 ui-lg-12">
+					<div class="card">
+						<p:panelGrid columns="4" layout="grid" style="width:100%"
+							styleClass="ui-panelgrid-blank form-group">
+							<h:panelGroup styleClass="md-inputfield">
+								<p:inputText id="inpNombreCliente" readonly="true"
+									style="width:80%"
+									value="#{gestionCobranzaBn.clienteSeleccionado.persona.nombreCompleto}"></p:inputText>
+								<p:commandButton icon="ui-icon-search" update=":frm_car_018"
+									oncomplete="PF('dlg_car_018').show()" title="Buscar Cliente"></p:commandButton>
+								<label>Cliente</label>
+							</h:panelGroup>
+							<h:panelGroup>
+								<p:selectOneMenu converter="#{empresaConverter}"
+									value="#{gestionCobranzaBn.empresaSeleccionada}">
+									<f:selectItem itemLabel="Empresa" />
+									<f:selectItems value="#{gestionCobranzaBn.empresas}"
+										var="empresa" itemLabel="#{empresa.descripcion}"
+										itemValue="#{empresa}"></f:selectItems>
+									<p:ajax update="frm_car_017:selectOneProductoCartera"
+										process="@this" event="change"></p:ajax>
+								</p:selectOneMenu>
+							</h:panelGroup>
+							<h:panelGroup>
+								<p:selectOneMenu id="selectOneProductoCartera"
+									value="#{gestionCobranzaBn.companiaVirtualSeleccionado}"
+									converter="#{productoCarteraCobranzaConverter}">
+									<f:selectItem itemLabel="Línea Negocio" />
+									<f:selectItems
+										value="#{gestionCobranzaBn.listProductoCarteraCobranza}"
+										var="productoCarteraCobranza"
+										itemLabel="#{productoCarteraCobranza.descripcion}"
+										itemValue="#{productoCarteraCobranza}">
+									</f:selectItems>
+								</p:selectOneMenu>
+							</h:panelGroup>
+						</p:panelGrid>
+						<p:panelGrid columns="4" layout="grid" style="width:100%"
+							styleClass="ui-panelgrid-blank form-group">
+							<h:panelGroup styleClass="md-inputfield">
+								<p:calendar value="#{gestionCobranzaBn.fechaDesde}"
+									pattern="dd-MM-yyyy" showOn="button">
+									<p:ajax event="dateSelect" process="@this"></p:ajax>
+								</p:calendar>
+								<label>Fecha desde</label>
+							</h:panelGroup>
+							<h:panelGroup styleClass="md-inputfield">
+								<p:calendar value="#{gestionCobranzaBn.fechaHasta}"
+									pattern="dd-MM-yyyy" showOn="button">
+									<p:ajax event="dateSelect" process="@this"></p:ajax>
+								</p:calendar>
+								<label>Fecha hasta</label>
+							</h:panelGroup>
+							<h:panelGroup>
+								<p:selectOneMenu id="selectOneEstadoFactura"
+									value="#{gestionCobranzaBn.tipoEstadoCobranzaCarteraSeleccionada}">
+									<f:selectItem itemLabel="Estado" />
+									<f:selectItems value="#{collectorEM.estadosFacturaCartera}"
+										var="estadoFactura" itemLabel="#{estadoFactura.description}"
+										itemValue="#{estadoFactura}" />
+								</p:selectOneMenu>
+							</h:panelGroup>
+							<p:commandButton title="Buscar"
+								action="#{gestionCobranzaBn.buscar()}"
+								update="dtbFacturaCartera" icon="ui-icon-search"
+								styleClass="secondary"></p:commandButton>
+						</p:panelGrid>
+					</div>
+				</div>
+			</div>
+			<p:dataTable id="dtbFacturaCartera" paginator="true" rows="6"
+				tableStyle="table-layout:auto" paginatorPosition="bottom"
+				style="margin-bottom:10px" reflow="true"
+				value="#{gestionCobranzaBn.facturasCartera}"
+				emptyMessage="Registro no encontrado" var="factura"
+				rowKey="#{factura.idFacturaCartera}">
+				<f:facet name="header">
+					<h:outputText value="Facturas" />
+				</f:facet>
+				<p:column headerText="Código Clinte JDE">
+					<h:outputText value="#{factura.cliente.idClienteJDE}" />
+				</p:column>
+				<p:column headerText="Razón Social">
+					<h:outputText value="#{factura.cliente.nombreAlfa}" />
+				</p:column>
+				<p:column headerText="Nro Comprobante">
+					<h:outputText value="#{factura.nroFactura}" />
+				</p:column>
+				<p:column headerText="Fecha Emisión">
+					<h:outputText value="#{factura.fechaEmision}">
+						<f:convertDateTime pattern="dd-MM-yyyy" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Fecha Ultimo Pago">
+					<h:outputText value="#{factura.fechaUltimoPago}">
+						<f:convertDateTime pattern="dd-MM-yyyy" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Fecha Vencimiento">
+					<h:outputText value="#{factura.fechaVencimiento}">
+						<f:convertDateTime pattern="dd-MM-yyyy" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Valor Factura">
+					<h:outputText value="#{factura.valorTotal}" />
+				</p:column>
+				<p:column headerText="Pagos">
+					<h:outputText value="#{factura.valorPagado}" />
+				</p:column>
+				<p:column headerText="Saldo">
+					<h:outputText value="#{factura.valorSaldo}" />
+				</p:column>
+				<p:column headerText="Estado">
+					<h:outputText
+						value="#{factura.tipoEstadoCobranzaCartera.descripcion}">
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Gestión">
+					<div align="center">
+						<p:commandButton icon="ui-icon-update" styleClass="secondary"
+							update=":frm_car_019"
+							action="#{gestionCobranzaBn.modificar(factura)}"
+							oncomplete="PF('dlg_car_019').show()" title="Ver Gestión"></p:commandButton>
+					</div>
+				</p:column>
+				<p:column headerText="Historial Gestión">
+					<div align="center">
+						<p:commandButton styleClass="secondary"
+							action="#{gestionCobranzaBn.imprimir(factura)}"
+							oncomplete="PF('dlg_car_rpt_001').show()" icon="ui-icon-print"
+							update=":frm_car_rpt_001" title="Ver Historial Gestión"></p:commandButton>
+					</div>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+		<ui:include src="/pages/cartera/car_018.xhtml" />
+		<ui:include src="/pages/cartera/car_019.xhtml" />
+		<!--  	<ui:include src="/pages/cartera/car_020.xhtml" />-->
+		<ui:include src="/pages/reporte/cartera/car_rpt_001.xhtml" />
+	</ui:define>
+</ui:composition>

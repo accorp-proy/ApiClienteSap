@@ -1,0 +1,479 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+	<p:dialog widgetVar="dlg_car_019" id="dlg_car_019" responsive="true"
+		appendTo="@(body)" resizable="false" height="500px">
+		<div align="left">
+			<f:facet name="header">
+				<p:outputLabel value="Gestión Cobranza "></p:outputLabel>
+				<p:outputLabel value="car_019.xhtml"
+					rendered="#{appMain.usuario.idUsuario eq 1}"></p:outputLabel>
+			</f:facet>
+		</div>
+		<h:form id="frm_car_019">
+			<p:growl autoUpdate="true"></p:growl>
+			<p:fieldset legend="Información Cliente">
+				<div class="ui-fluid">
+					<p:panelGrid columns="3" layout="grid"
+						styleClass="ui-panelgrid-blank form-group"
+						columnClasses="ui-grid-col-6,ui-grid-col-6">
+						<h:panelGroup styleClass="md-inputfield">
+							<p:inputText readonly="true"
+								value="#{gestionCobranzaBn.facturaCarteraSeleccionada.cliente.persona.identificacionPersona}"></p:inputText>
+							<label>Identificación</label>
+						</h:panelGroup>
+						<h:panelGroup styleClass="md-inputfield">
+							<p:inputText readonly="true"
+								value="#{gestionCobranzaBn.facturaCarteraSeleccionada.cliente.persona.nombreCompleto}"></p:inputText>
+							<label>Razón Social</label>
+						</h:panelGroup>
+						<h:panelGroup styleClass="md-inputfield">
+							<p:inputText readonly="true"
+								value="#{gestionCobranzaBn.facturaCarteraSeleccionada.cliente.limiteCredito}"></p:inputText>
+							<label>Límite Crédito</label>
+						</h:panelGroup>
+						<h:panelGroup styleClass="md-inputfield">
+							<p:inputText readonly="true"
+								value="#{gestionCobranzaBn.facturaCarteraSeleccionada.cliente.persona.nombreComercial}"></p:inputText>
+							<label>Nombre Comercial</label>
+						</h:panelGroup>
+						<h:panelGroup styleClass="md-inputfield">
+							<p:inputText readonly="true"
+								value="#{gestionCobranzaBn.facturaCarteraSeleccionada.cliente.persona.telefonoConvencional}"></p:inputText>
+							<label>Teléfono</label>
+						</h:panelGroup>
+						<h:panelGroup styleClass="md-inputfield">
+							<p:inputText readonly="true"
+								value="#{gestionCobranzaBn.facturaCarteraSeleccionada.cliente.persona.email}"></p:inputText>
+							<label>Correo</label>
+						</h:panelGroup>
+					</p:panelGrid>
+					<p:dataTable reflow="true" tableStyle="table-layout:auto"
+						paginator="true" rows="3" paginatorPosition="bottom"
+						emptyMessage="No existen Facturas " responsive="true"
+						value="#{gestionCobranzaBn.facturaCarteraSeleccionada.facturaCarteraDetalle}"
+						var="facturaCarteraDetalle"
+						rowKey="#{facturaCarteraDetalle.idFacturaCarteraDetalle}">
+						<f:facet name="header">
+            Facturas Emitidas
+        </f:facet>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Secuencia" />
+							</f:facet>
+							<h:outputText value="#{facturaCarteraDetalle.secuencia}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Tipo Documento" />
+							</f:facet>
+							<h:outputText value="#{facturaCarteraDetalle.secuencia}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Fecha Emisión" />
+							</f:facet>
+							<h:outputText value="#{facturaCarteraDetalle.fechaEmision}">
+								<f:convertDateTime pattern="dd-MM-yyyy" />
+							</h:outputText>
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Fecha Vencimiento" />
+							</f:facet>
+							<h:outputText value="#{facturaCarteraDetalle.fechaVencimiento}">
+								<f:convertDateTime pattern="dd-MM-yyyy" />
+							</h:outputText>
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Valor Pendiente" />
+							</f:facet>
+							<h:outputText value="#{facturaCarteraDetalle.valorSaldo}">
+								<f:convertNumber pattern="#,##0.00" />
+							</h:outputText>
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Valor Total" />
+							</f:facet>
+							<h:outputText value="#{facturaCarteraDetalle.valorTotal}">
+								<f:convertNumber pattern="#,##0.00" />
+							</h:outputText>
+						</p:column>
+						<p:column headerText="Ver Pagos" style="width:60px">
+							<div align="center">
+								<p:commandButton styleClass="secondary"
+									action="#{gestionCobranzaBn.modificarPagoCartera(facturaCarteraDetalle)}"
+									oncomplete="PF('dlg_car_020').show()" icon="ui-icon-update"
+									update=":frm_car_020"></p:commandButton>
+							</div>
+						</p:column>
+					</p:dataTable>
+					<p:spacer></p:spacer>
+					<p:tabView id="tabViewGestion">
+						<div class="ui-fluid">
+							<p:tab>
+								<f:facet name="title">
+									<p:graphicImage value="/resources/images/iconos/email.png" />
+								</f:facet>
+								<p:panelGrid columns="3" layout="grid"
+									styleClass="ui-panelgrid-blank form-group"
+									columnClasses="ui-grid-col-4,ui-grid-col-4,ui-grid-col-4">
+									<h:panelGroup styleClass="md-inputfield">
+										<p:inputText
+											value="#{gestionCobranzaBn.gestionClienteCarteraSeleccionadaEmail.correo}"></p:inputText>
+										<label>Correo</label>
+									</h:panelGroup>
+									<h:panelGroup styleClass="md-inputfield">
+										<p:calendar pattern="dd/mm/yyyy" mask="true"
+											value="#{gestionCobranzaBn.gestionClienteCarteraSeleccionadaEmail.fechaGestion}"></p:calendar>
+										<label>Fecha</label>
+									</h:panelGroup>
+									<h:panelGroup styleClass="md-inputfield">
+										<p:calendar pattern="HH:mm" timeOnly="true"
+											value="#{gestionCobranzaBn.gestionClienteCarteraSeleccionadaEmail.horaGestion}"></p:calendar>
+										<label>Hora</label>
+									</h:panelGroup>
+									<p:outputLabel for="radioContestoEmail" value="Contesto" />
+									<p:selectOneRadio id="radioContestoEmail" layout="responsive"
+										columns="2" styleClass="form-group"
+										value="#{gestionCobranzaBn.gestionClienteCarteraSeleccionadaEmail.contesto}">
+										<f:selectItems value="#{gestionCobranzaBn.gestion}"
+											var="gestion" itemLabel="#{gestion}" itemValue="#{gestion}" />
+									</p:selectOneRadio>
+									<h:panelGroup styleClass="md-inputfield">
+										<p:inputText
+											value="#{gestionCobranzaBn.gestionClienteCarteraSeleccionadaEmail.observacion}"></p:inputText>
+										<label>Observación</label>
+									</h:panelGroup>
+									<p:outputLabel for="radioAcuerdoEmail" value="Acuerdo Pago" />
+									<p:selectOneRadio id="radioAcuerdoEmail" layout="responsive"
+										columns="2" styleClass="form-group"
+										value="#{gestionCobranzaBn.gestionClienteCarteraSeleccionadaEmail.acuerdoPago}">
+										<f:selectItems value="#{gestionCobranzaBn.gestion}"
+											var="gestion" itemLabel="#{gestion}" itemValue="#{gestion}" />
+									</p:selectOneRadio>
+									<p:commandButton value="Guardar Gestión"
+										action="#{gestionCobranzaBn.guardar(0)}"></p:commandButton>
+								</p:panelGrid>
+								<p:tabView id="tabViewAcuerdoEmail">
+									<p:tab>
+										<f:facet name="title">
+											<p:graphicImage
+												value="/resources/images/iconos/acuerdoPago.png" />
+										</f:facet>
+										<p:panelGrid columns="3" layout="grid"
+											styleClass="ui-panelgrid-blank form-group"
+											columnClasses="ui-grid-col-4,ui-grid-col-4,ui-grid-col-4">
+											<p:selectOneMenu editable="false"
+												converter="#{parametrosConverter}"
+												value="#{gestionCobranzaBn.gestionClienteCarteraSeleccionadaEmail.parTipoPagoAcuerdo}">
+												<f:selectItem itemLabel="Tipo Pago" />
+												<f:selectItems
+													value="#{gestionCobranzaBn.listaTipoAcuerdoPago}"
+													var="tipoPago" itemLabel="#{tipoPago.nombreLista}"
+													itemValue="#{tipoPago}"></f:selectItems>
+											</p:selectOneMenu>
+											<h:panelGroup styleClass="md-inputfield">
+												<p:calendar pattern="dd/mm/yyyy" mask="true"
+													value="#{gestionCobranzaBn.gestionClienteCarteraSeleccionadaEmail.fechaAcuerdoPago}"></p:calendar>
+												<label>Fecha Retiro</label>
+											</h:panelGroup>
+											<h:panelGroup styleClass="md-inputfield">
+												<p:calendar pattern="HH:mm" timeOnly="true"
+													value="#{gestionCobranzaBn.gestionClienteCarteraSeleccionadaEmail.horaAcuerdoPago}"></p:calendar>
+												<label>Hora Retiro</label>
+											</h:panelGroup>
+											<p:outputLabel for="radioUrbano" value="Retiro" />
+											<p:selectOneRadio id="radioUrbano" layout="responsive"
+												columns="2" styleClass="form-group"
+												value="#{gestionCobranzaBn.gestionClienteCarteraSeleccionadaEmail.urbanoEjecutivo}">
+												<f:selectItems value="#{gestionCobranzaBn.retiro}"
+													var="retiro" itemLabel="#{retiro}" itemValue="#{retiro}" />
+											</p:selectOneRadio>
+											<h:panelGroup styleClass="md-inputfield">
+												<p:inputNumber
+													value="#{gestionCobranzaBn.gestionClienteCarteraSeleccionadaEmail.valorRetiro}" />
+												<label>Valor Pago</label>
+											</h:panelGroup>
+										</p:panelGrid>
+									</p:tab>
+								</p:tabView>
+							</p:tab>
+						</div>
+						<p:tab>
+							<f:facet name="title">
+								<p:graphicImage value="/resources/images/iconos/llamar.png" />
+							</f:facet>
+							<p:panelGrid columns="3" layout="grid"
+								styleClass="ui-panelgrid-blank form-group"
+								columnClasses="ui-grid-col-4,ui-grid-col-4,ui-grid-col-4">
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText
+										value="#{gestionCobranzaBn.gestionClienteCarteraSeleccionadaLlamada.telefono}"></p:inputText>
+									<label>Número Teléfono</label>
+								</h:panelGroup>
+								<h:panelGroup styleClass="md-inputfield">
+									<p:calendar pattern="dd/mm/yyyy" mask="true"
+										value="#{gestionCobranzaBn.gestionClienteCarteraSeleccionadaLlamada.fechaGestion}"></p:calendar>
+									<label>Fecha</label>
+								</h:panelGroup>
+								<h:panelGroup styleClass="md-inputfield">
+									<p:calendar pattern="HH:mm" timeOnly="true"
+										value="#{gestionCobranzaBn.gestionClienteCarteraSeleccionadaLlamada.horaGestion}"></p:calendar>
+									<label>Hora</label>
+								</h:panelGroup>
+								<p:outputLabel for="radioContestoLlamar" value="Contesto" />
+								<p:selectOneRadio id="radioContestoLlamar" layout="responsive"
+									columns="2" styleClass="form-group"
+									value="#{gestionCobranzaBn.gestionClienteCarteraSeleccionadaLlamada.contesto}">
+									<f:selectItems value="#{gestionCobranzaBn.gestion}"
+										var="gestion" itemLabel="#{gestion}" itemValue="#{gestion}" />
+								</p:selectOneRadio>
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText
+										value="#{gestionCobranzaBn.gestionClienteCarteraSeleccionadaLlamada.observacion}"></p:inputText>
+									<label>Observación</label>
+								</h:panelGroup>
+								<p:outputLabel for="radioAcuerdoLlamar" value="Acuerdo Pago" />
+								<p:selectOneRadio id="radioAcuerdoLlamar" layout="responsive"
+									columns="2" styleClass="form-group"
+									value="#{gestionCobranzaBn.gestionClienteCarteraSeleccionadaLlamada.acuerdoPago}">
+									<f:selectItems value="#{gestionCobranzaBn.gestion}"
+										var="gestion" itemLabel="#{gestion}" itemValue="#{gestion}" />
+								</p:selectOneRadio>
+								<p:commandButton value="Guardar Gestión"
+									action="#{gestionCobranzaBn.guardar(1)}"></p:commandButton>
+							</p:panelGrid>
+							<p:tabView id="tabViewAcuerdoLlamada">
+								<p:tab>
+									<f:facet name="title">
+										<p:graphicImage
+											value="/resources/images/iconos/acuerdoPago.png" />
+									</f:facet>
+									<p:panelGrid columns="3" layout="grid"
+										styleClass="ui-panelgrid-blank form-group"
+										columnClasses="ui-grid-col-4,ui-grid-col-4,ui-grid-col-4">
+										<p:selectOneMenu editable="false"
+											converter="#{parametrosConverter}"
+											value="#{gestionCobranzaBn.gestionClienteCarteraSeleccionadaLlamada.parTipoPagoAcuerdo}">
+											<f:selectItem itemLabel="Tipo Pago" />
+											<f:selectItems
+												value="#{gestionCobranzaBn.listaTipoAcuerdoPago}"
+												var="tipoPago" itemLabel="#{tipoPago.nombreLista}"
+												itemValue="#{tipoPago}"></f:selectItems>
+										</p:selectOneMenu>
+										<h:panelGroup styleClass="md-inputfield">
+											<p:calendar pattern="dd/mm/yyyy" mask="true"
+												value="#{gestionCobranzaBn.gestionClienteCarteraSeleccionadaLlamada.fechaAcuerdoPago}"></p:calendar>
+											<label>Fecha Retiro</label>
+										</h:panelGroup>
+										<h:panelGroup styleClass="md-inputfield">
+											<p:calendar pattern="HH:mm" timeOnly="true"
+												value="#{gestionCobranzaBn.gestionClienteCarteraSeleccionadaLlamada.horaAcuerdoPago}"></p:calendar>
+											<label>Hora Retiro</label>
+										</h:panelGroup>
+										<p:outputLabel for="radioUrbanoLlamar" value="Retiro" />
+										<p:selectOneRadio id="radioUrbanoLlamar" layout="responsive"
+											columns="2" styleClass="form-group"
+											value="#{gestionCobranzaBn.gestionClienteCarteraSeleccionadaLlamada.urbanoEjecutivo}">
+											<f:selectItems value="#{gestionCobranzaBn.retiro}"
+												var="retiro" itemLabel="#{retiro}" itemValue="#{retiro}" />
+										</p:selectOneRadio>
+										<h:panelGroup styleClass="md-inputfield">
+											<p:inputNumber
+												value="#{gestionCobranzaBn.gestionClienteCarteraSeleccionadaLlamada.valorRetiro}" />
+											<label>Valor Pago</label>
+										</h:panelGroup>
+									</p:panelGrid>
+								</p:tab>
+							</p:tabView>
+						</p:tab>
+						<p:tab>
+							<f:facet name="title">
+								<p:graphicImage value="/resources/images/iconos/visita.png" />
+							</f:facet>
+							<p:panelGrid columns="3" layout="grid"
+								styleClass="ui-panelgrid-blank form-group"
+								columnClasses="ui-grid-col-4,ui-grid-col-4,ui-grid-col-4">
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText
+										value="#{gestionCobranzaBn.gestionClienteCarteraSeleccionadaVisita.lugarVisita}"></p:inputText>
+									<label>Lugar Visita</label>
+								</h:panelGroup>
+								<h:panelGroup styleClass="md-inputfield">
+									<p:calendar pattern="dd/mm/yyyy" mask="true"
+										value="#{gestionCobranzaBn.gestionClienteCarteraSeleccionadaVisita.fechaGestion}"></p:calendar>
+									<label>Fecha</label>
+								</h:panelGroup>
+								<h:panelGroup styleClass="md-inputfield">
+									<p:calendar pattern="HH:mm" timeOnly="true"
+										value="#{gestionCobranzaBn.gestionClienteCarteraSeleccionadaVisita.horaGestion}"></p:calendar>
+									<label>Hora</label>
+								</h:panelGroup>
+								<p:outputLabel for="radioContestoVisita" value="Contesto" />
+								<p:selectOneRadio id="radioContestoVisita" layout="responsive"
+									columns="2" styleClass="form-group"
+									value="#{gestionCobranzaBn.gestionClienteCarteraSeleccionadaVisita.contesto}">
+									<f:selectItems value="#{gestionCobranzaBn.gestion}"
+										var="gestion" itemLabel="#{gestion}" itemValue="#{gestion}" />
+								</p:selectOneRadio>
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText
+										value="#{gestionCobranzaBn.gestionClienteCarteraSeleccionadaVisita.observacion}"></p:inputText>
+									<label>Observación</label>
+								</h:panelGroup>
+								<p:outputLabel for="radioAcuerdoVisita" value="Acuerdo Pago" />
+								<p:selectOneRadio id="radioAcuerdoVisita" layout="responsive"
+									columns="2" styleClass="form-group"
+									value="#{gestionCobranzaBn.gestionClienteCarteraSeleccionadaVisita.acuerdoPago}">
+									<f:selectItems value="#{gestionCobranzaBn.gestion}"
+										var="gestion" itemLabel="#{gestion}" itemValue="#{gestion}" />
+								</p:selectOneRadio>
+								<p:commandButton value="Guardar Gestión"
+									action="#{gestionCobranzaBn.guardar(2)}"></p:commandButton>
+							</p:panelGrid>
+							<p:tabView id="tabViewAcuerdoVisita">
+								<p:tab>
+									<f:facet name="title">
+										<p:graphicImage
+											value="/resources/images/iconos/acuerdoPago.png" />
+									</f:facet>
+									<p:panelGrid columns="3" layout="grid"
+										styleClass="ui-panelgrid-blank form-group"
+										columnClasses="ui-grid-col-4,ui-grid-col-4,ui-grid-col-4">
+										<p:selectOneMenu editable="false"
+											converter="#{parametrosConverter}"
+											value="#{gestionCobranzaBn.gestionClienteCarteraSeleccionadaVisita.parTipoPagoAcuerdo}">
+											<f:selectItem itemLabel="Tipo Pago" />
+											<f:selectItems
+												value="#{gestionCobranzaBn.listaTipoAcuerdoPago}"
+												var="tipoPago" itemLabel="#{tipoPago.nombreLista}"
+												itemValue="#{tipoPago}"></f:selectItems>
+										</p:selectOneMenu>
+										<h:panelGroup styleClass="md-inputfield">
+											<p:calendar pattern="dd/mm/yyyy" mask="true"
+												value="#{gestionCobranzaBn.gestionClienteCarteraSeleccionadaVisita.fechaAcuerdoPago}"></p:calendar>
+											<label>Fecha Retiro</label>
+										</h:panelGroup>
+										<h:panelGroup styleClass="md-inputfield">
+											<p:calendar pattern="HH:mm" timeOnly="true"
+												value="#{gestionCobranzaBn.gestionClienteCarteraSeleccionadaVisita.horaAcuerdoPago}"></p:calendar>
+											<label>Hora Retiro</label>
+										</h:panelGroup>
+										<p:outputLabel for="radioUrbanoVisita" value="Retiro" />
+										<p:selectOneRadio id="radioUrbanoVisita" layout="responsive"
+											columns="2" styleClass="form-group"
+											value="#{gestionCobranzaBn.gestionClienteCarteraSeleccionadaVisita.urbanoEjecutivo}">
+											<f:selectItems value="#{gestionCobranzaBn.retiro}"
+												var="retiro" itemLabel="#{retiro}" itemValue="#{retiro}" />
+										</p:selectOneRadio>
+										<h:panelGroup styleClass="md-inputfield">
+											<p:inputNumber
+												value="#{gestionCobranzaBn.gestionClienteCarteraSeleccionadaVisita.valorRetiro}" />
+											<label>Valor Pago</label>
+										</h:panelGroup>
+									</p:panelGrid>
+								</p:tab>
+							</p:tabView>
+						</p:tab>
+						<p:tab>
+							<f:facet name="title">
+								<p:graphicImage value="/resources/images/iconos/sms.png" />
+							</f:facet>
+							<p:panelGrid columns="3" layout="grid"
+								styleClass="ui-panelgrid-blank form-group"
+								columnClasses="ui-grid-col-4,ui-grid-col-4,ui-grid-col-4">
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText
+										value="#{gestionCobranzaBn.gestionClienteCarteraSeleccionadaSms.telefono}"></p:inputText>
+									<label>Número Celular</label>
+								</h:panelGroup>
+								<h:panelGroup styleClass="md-inputfield">
+									<p:calendar pattern="dd/mm/yyyy" mask="true"
+										value="#{gestionCobranzaBn.gestionClienteCarteraSeleccionadaSms.fechaGestion}"></p:calendar>
+									<label>Fecha</label>
+								</h:panelGroup>
+								<h:panelGroup styleClass="md-inputfield">
+									<p:calendar pattern="HH:mm" timeOnly="true"
+										value="#{gestionCobranzaBn.gestionClienteCarteraSeleccionadaSms.horaGestion}"></p:calendar>
+									<label>Hora</label>
+								</h:panelGroup>
+								<p:outputLabel for="radioContestoSms" value="Contesto" />
+								<p:selectOneRadio id="radioContestoSms" layout="responsive"
+									columns="2" styleClass="form-group"
+									value="#{gestionCobranzaBn.gestionClienteCarteraSeleccionadaSms.contesto}">
+									<f:selectItems value="#{gestionCobranzaBn.gestion}"
+										var="gestion" itemLabel="#{gestion}" itemValue="#{gestion}" />
+								</p:selectOneRadio>
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText
+										value="#{gestionCobranzaBn.gestionClienteCarteraSeleccionadaSms.observacion}"></p:inputText>
+									<label>Observación</label>
+								</h:panelGroup>
+								<p:outputLabel for="radioAcuerdoSms" value="Acuerdo Pago" />
+								<p:selectOneRadio id="radioAcuerdoSms" layout="responsive"
+									columns="2" styleClass="form-group"
+									value="#{gestionCobranzaBn.gestionClienteCarteraSeleccionadaSms.acuerdoPago}">
+									<f:selectItems value="#{gestionCobranzaBn.gestion}"
+										var="gestion" itemLabel="#{gestion}" itemValue="#{gestion}" />
+								</p:selectOneRadio>
+								<p:commandButton value="Guardar Gestión"
+									action="#{gestionCobranzaBn.guardar(3)}"></p:commandButton>
+							</p:panelGrid>
+							<p:tabView id="tabViewAcuerdoSms">
+								<p:tab>
+									<f:facet name="title">
+										<p:graphicImage
+											value="/resources/images/iconos/acuerdoPago.png" />
+									</f:facet>
+									<p:panelGrid columns="3" layout="grid"
+										styleClass="ui-panelgrid-blank form-group"
+										columnClasses="ui-grid-col-4,ui-grid-col-4,ui-grid-col-4">
+										<p:selectOneMenu editable="false"
+											converter="#{parametrosConverter}"
+											value="#{gestionCobranzaBn.gestionClienteCarteraSeleccionadaSms.parTipoPagoAcuerdo}">
+											<f:selectItem itemLabel="Tipo Pago" />
+											<f:selectItems
+												value="#{gestionCobranzaBn.listaTipoAcuerdoPago}"
+												var="tipoPago" itemLabel="#{tipoPago.nombreLista}"
+												itemValue="#{tipoPago}"></f:selectItems>
+										</p:selectOneMenu>
+										<h:panelGroup styleClass="md-inputfield">
+											<p:calendar pattern="dd/mm/yyyy" mask="true"
+												value="#{gestionCobranzaBn.gestionClienteCarteraSeleccionadaSms.fechaAcuerdoPago}"></p:calendar>
+											<label>Fecha Retiro</label>
+										</h:panelGroup>
+										<h:panelGroup styleClass="md-inputfield">
+											<p:calendar pattern="HH:mm" timeOnly="true"
+												value="#{gestionCobranzaBn.gestionClienteCarteraSeleccionadaSms.horaAcuerdoPago}"></p:calendar>
+											<label>Hora Retiro</label>
+										</h:panelGroup>
+										<p:outputLabel for="radioUrbanoSms" value="Retiro" />
+										<p:selectOneRadio id="radioUrbanoSms" layout="responsive"
+											columns="2" styleClass="form-group"
+											value="#{gestionCobranzaBn.gestionClienteCarteraSeleccionadaSms.urbanoEjecutivo}">
+											<f:selectItems value="#{gestionCobranzaBn.retiro}"
+												var="retiro" itemLabel="#{retiro}" itemValue="#{retiro}" />
+										</p:selectOneRadio>
+										<h:panelGroup styleClass="md-inputfield">
+											<p:inputNumber
+												value="#{gestionCobranzaBn.gestionClienteCarteraSeleccionadaSms.valorRetiro}" />
+											<label>Valor Pago</label>
+										</h:panelGroup>
+									</p:panelGrid>
+								</p:tab>
+							</p:tabView>
+						</p:tab>
+					</p:tabView>
+
+				</div>
+			</p:fieldset>
+		</h:form>
+		<ui:include src="/pages/cartera/car_020.xhtml" />
+	</p:dialog>
+</ui:composition>

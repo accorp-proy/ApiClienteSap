@@ -1,0 +1,623 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptFacturaCarteraExcel" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="bb484940-f32b-4101-93f6-fd100ffbd01d">
+	<property name="ireport.zoom" value="3.0"/>
+	<property name="ireport.x" value="694"/>
+	<property name="ireport.y" value="144"/>
+	<property name="net.sf.jasperreports.export.xls.detect.cell.type" value="true"/>
+	<parameter name="par_usuario" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="par_fecha_desde" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="par_fecha_hasta" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="par_id_empresa" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="par_estado" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="logo" class="java.io.InputStream">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select
+car.id_factura_cartera as idFacturaCartera,
+det.id_factura_cartera_detalle as idFacturaCarteraDetalle,
+cli.id_cliente_jde as idClienteJde,
+cli.nombre_alfa as nombreAlfa,
+det.secuencia as secuencia,
+det.nro_factura as nroFactura,
+doc.id_tipo_documento_jde as idTipoDocumentoJde,
+det.fecha_emision as fechaEmision,
+det.fecha_vencimiento as fechaVencimiento,
+det.valor_pagado as valorPagado,
+det.valor_saldo as valorSaldo,
+det.valor_total as valorTotal,
+det.tipo_estado_cartera_cobranza as estado
+from factura_cartera_detalle_et det
+inner join factura_cartera_et car
+on det.id_factura_cartera = car.id_factura_cartera
+inner join cliente_et cli
+on car.id_cliente = cli.id_cliente
+inner join tipo_documento_et doc
+on det.id_tipo_documento = doc.id_tipo_documento
+where (det.fecha_emision between $P{par_fecha_desde} and $P{par_fecha_hasta})
+and (car.id_empresa = $P{par_id_empresa} or $P{par_id_empresa}= 0)
+and (det.tipo_estado_cartera_cobranza = $P{par_estado} or $P{par_estado} = '')
+order by det.fecha_emision ;]]>
+	</queryString>
+	<field name="idfacturacartera" class="java.lang.Long"/>
+	<field name="idfacturacarteradetalle" class="java.lang.Long"/>
+	<field name="idclientejde" class="java.lang.Long"/>
+	<field name="nombrealfa" class="java.lang.String"/>
+	<field name="secuencia" class="java.lang.String"/>
+	<field name="nrofactura" class="java.lang.String"/>
+	<field name="idtipodocumentojde" class="java.lang.String"/>
+	<field name="fechaemision" class="java.sql.Timestamp"/>
+	<field name="fechavencimiento" class="java.sql.Timestamp"/>
+	<field name="valorpagado" class="java.lang.Double"/>
+	<field name="valorsaldo" class="java.lang.Double"/>
+	<field name="valortotal" class="java.lang.Double"/>
+	<field name="estado" class="java.lang.String"/>
+	<variable name="CountEstadoPagado" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[new Integer(!($F{estado}.equals("PAGADA")) ? 0 : 1)]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<variable name="SumTEstadoPagado" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[new Double($F{estado}.equals("PAGADA") ? $F{valortotal}   : 0D)]]></variableExpression>
+	</variable>
+	<variable name="CountEstadoVencida" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[new Integer(!($F{estado}.equals("VENCIDA")) ? 0 : 1)]]></variableExpression>
+	</variable>
+	<variable name="SumTEstadoVencida" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[new Double($F{estado}.equals("VENCIDA") ? $F{valortotal}   : 0D)]]></variableExpression>
+	</variable>
+	<variable name="CountEstadoCorriente" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[new Integer(!($F{estado}.equals("CORRIENTE")) ? 0 : 1)]]></variableExpression>
+	</variable>
+	<variable name="SumTEstadoCorriente" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[new Double($F{estado}.equals("CORRIENTE") ? $F{valortotal}   : 0D)]]></variableExpression>
+	</variable>
+	<variable name="CountEstadoCorrienteF" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[new Integer(!($F{estado}.equals("CORRIENTE_FUTURA")) ? 0 : 1)]]></variableExpression>
+	</variable>
+	<variable name="SumTEstadoCorrienteF" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[new Double($F{estado}.equals("CORRIENTE_FUTURA") ? $F{valortotal}   : 0D)]]></variableExpression>
+	</variable>
+	<variable name="TotalCantidad" class="java.lang.Integer">
+		<variableExpression><![CDATA[$V{CountEstadoPagado}+ $V{CountEstadoVencida}+
+$V{CountEstadoCorriente}+ $V{CountEstadoCorrienteF}]]></variableExpression>
+	</variable>
+	<variable name="TotalEstado" class="java.lang.Double">
+		<variableExpression><![CDATA[$V{SumTEstadoPagado} + $V{SumTEstadoVencida} + $V{SumTEstadoCorriente} + $V{SumTEstadoCorrienteF}]]></variableExpression>
+	</variable>
+	<variable name="SumSEstadoPagada" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[new Double($F{estado}.equals("PAGADA") ? $F{valorsaldo}   : 0D)]]></variableExpression>
+	</variable>
+	<variable name="SumSEstadoVencida" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[new Double($F{estado}.equals("VENCIDA") ? $F{valorsaldo}   : 0D)]]></variableExpression>
+	</variable>
+	<variable name="SumSEstadoCorriente" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[new Double($F{estado}.equals("CORRIENTE") ? $F{valorsaldo}   : 0D)]]></variableExpression>
+	</variable>
+	<variable name="SumSEstadoCorrienteF" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[new Double($F{estado}.equals("CORRIENTE_FUTURA") ? $F{valorsaldo}   : 0D)]]></variableExpression>
+	</variable>
+	<variable name="TotalSaldoEstado" class="java.lang.Double">
+		<variableExpression><![CDATA[$V{SumSEstadoPagada} + $V{SumSEstadoVencida}+  $V{SumSEstadoCorriente}+$V{SumSEstadoCorrienteF}]]></variableExpression>
+	</variable>
+	<variable name="SumPEstadoPagada" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[new Double($F{estado}.equals("PAGADA") ? $F{valorpagado}   : 0D)]]></variableExpression>
+	</variable>
+	<variable name="SumPEstadoVencida" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[new Double($F{estado}.equals("VENCIDA") ? $F{valorpagado}  : 0D)]]></variableExpression>
+	</variable>
+	<variable name="SumPEstadoCorriente" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[new Double($F{estado}.equals("CORRIENTE") ? $F{valorpagado}   : 0D)]]></variableExpression>
+	</variable>
+	<variable name="SumPEstadoCorrienteF" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[new Double($F{estado}.equals("CORRIENTE_FUTURA") ? $F{valorpagado}   : 0D)]]></variableExpression>
+	</variable>
+	<variable name="TotalPagadoEstado" class="java.lang.Double">
+		<variableExpression><![CDATA[$V{SumPEstadoPagada} + $V{SumPEstadoVencida} +$V{SumPEstadoCorriente}+ $V{SumPEstadoCorrienteF}]]></variableExpression>
+	</variable>
+	<variable name="Paginado" class="java.lang.String">
+		<variableExpression><![CDATA[+$V{PAGE_NUMBER} +"/"]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="65">
+			<staticText>
+				<reportElement x="652" y="0" width="60" height="10" uuid="b3734df3-47e9-4983-9f21-6b225108e18d"/>
+				<textElement textAlignment="Center">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Usuario :]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="712" y="0" width="90" height="10" uuid="0ed5009b-f4f9-46f2-a206-485730991b7e"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{par_usuario}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy HH:mm" isBlankWhenNull="false">
+				<reportElement x="712" y="10" width="90" height="10" isPrintWhenDetailOverflows="true" uuid="fd26eb7f-14f1-4158-9987-46da23c81eb7"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="652" y="10" width="60" height="10" uuid="099b766e-a7d0-4f5d-ad10-9dc6bc2f564b"/>
+				<textElement textAlignment="Center">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Impresión :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="51" y="50" width="233" height="15" backcolor="#FF6600" uuid="c3c8b73d-f827-41d0-bd0c-310083027de9"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ Nombre Cliente]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="284" y="50" width="51" height="15" backcolor="#FF6600" uuid="cfd53d37-cb10-41f9-af52-c6f4192558a5"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Secuencia]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="335" y="50" width="60" height="15" backcolor="#FF6600" uuid="e71aba47-966c-4576-bad6-a08567d6640c"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ Nro.Factura]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="395" y="50" width="60" height="15" backcolor="#FF6600" uuid="6857e9a8-baab-479d-b352-0e87702f58d0"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ F. Emisión]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="455" y="50" width="72" height="15" backcolor="#FF6600" uuid="914cea19-e84e-4ef4-bfc8-300e228e2952"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ F. Vencimiento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="527" y="50" width="63" height="15" backcolor="#FF6600" uuid="7f459743-4cee-4743-9aa3-4a70c47451d5"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Valor Total]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="590" y="50" width="62" height="15" backcolor="#FF6600" uuid="dd98926c-99bb-406c-b644-0db8aa4e7abd"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Valor Pagado]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="652" y="50" width="60" height="15" backcolor="#FF6600" uuid="39d695a6-6660-40cd-99f0-735e28ee9b9a"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Valor Saldo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="712" y="50" width="90" height="15" backcolor="#FF6600" uuid="6b0708ab-3a53-4cbc-b750-05763ca79db0"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Estado]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="20" width="802" height="15" uuid="df7c278d-f550-41c2-9415-c8b1aaaab742"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[GESTION COBRANZA FACTURA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="284" y="35" width="111" height="15" uuid="58530842-6e17-49a0-b4b9-06b523edebdc"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha Desde:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="395" y="35" width="60" height="15" uuid="c54ed407-0199-4ca4-9e3b-6d47b48e68cb"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{par_fecha_desde}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="527" y="35" width="63" height="15" uuid="bc37c338-fa82-4667-b66a-a7273bf06e1f"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{par_fecha_hasta}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="455" y="35" width="72" height="15" uuid="5b3e94de-8321-44d7-b473-facdb2396466"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha Hasta:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="50" width="51" height="15" backcolor="#FF6600" uuid="99ee061c-0766-43ad-9b85-d54368c2fca0"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Id Cliente]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="51" height="15" uuid="7df15248-6c8f-465c-90a8-000729beb0a8"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{idclientejde}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="51" y="0" width="233" height="15" uuid="47710f52-17f9-4ce4-be6b-b79d18932d78"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombrealfa}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="284" y="0" width="51" height="15" uuid="e12ca311-421a-4946-b838-014b9516d3cb"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{secuencia}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement x="335" y="0" width="60" height="15" uuid="6edd6805-32ee-4fa1-8eda-107597ea5d29"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nrofactura}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="395" y="0" width="60" height="15" uuid="9517b3b3-b56e-4b78-a1f1-7ddc362f533a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fechaemision}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="455" y="0" width="72" height="15" uuid="e9b29100-9f3d-4d99-917a-af94a7fc8f01"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fechavencimiento}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="527" y="0" width="63" height="15" uuid="95d6fcf4-8fa6-4f5b-b080-9878104b388a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valortotal}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="590" y="0" width="62" height="15" uuid="d94bef2d-3cc4-4706-9041-7a001c1c89c4"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valorpagado}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="652" y="0" width="60" height="15" uuid="b2c390eb-a2a2-4a03-b749-8e9388cbd019"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valorsaldo}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="712" y="0" width="90" height="15" uuid="c726e5fb-6665-4dc9-abc2-a03859e9947b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{estado}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="116" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="455" y="46" width="72" height="15" uuid="3b1c532c-cb9b-4e67-a67b-74260398a881"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{CountEstadoVencida}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="335" y="76" width="120" height="15" uuid="9c1cde2b-ad04-478f-bfa9-f65bf5842be8"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ Corriente Futura]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="335" y="46" width="120" height="15" uuid="3811a701-8fc4-402a-9a4a-deba0c601fa0"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ Vencida]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="455" y="61" width="72" height="15" uuid="101b55b3-f737-48e3-b00c-87ddc2d891fb"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{CountEstadoCorriente}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="527" y="61" width="63" height="15" uuid="f2ce1439-bf76-4d32-a16b-fc08eb3a0488"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{SumTEstadoCorriente}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="284" y="0" width="171" height="15" backcolor="#FF6600" uuid="f3ccce0c-dede-4e67-96d1-06a234a16a2b"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ Resumen de Facturas]]></text>
+			</staticText>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="527" y="76" width="63" height="15" uuid="6f4d11a1-c17c-42fa-850d-f8a8cee27a77"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{SumTEstadoCorrienteF}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="335" y="61" width="120" height="15" uuid="a5cfaa63-e8f8-4f50-b375-edd524e4d78b"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ Corriente]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="455" y="91" width="72" height="15" uuid="4f506974-5bfc-4a8e-ad33-a470fc911a65"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{TotalCantidad}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="455" y="31" width="72" height="15" uuid="9debf5fe-932e-498f-8053-a89ea4db06a1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{CountEstadoPagado}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="455" y="16" width="72" height="15" uuid="84812cec-fc5a-4512-b815-ad124b5d6be6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cantidad]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="527" y="16" width="63" height="15" uuid="78e164ba-def2-4256-bb08-bf694f679389"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="527" y="91" width="63" height="15" uuid="eddbb65f-7511-4374-aec8-a8e3818b575f"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{TotalEstado}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="335" y="31" width="120" height="15" uuid="c7ad6487-fa89-4a34-9c57-bf2c3f1ad1fb"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ Pagada]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="455" y="76" width="72" height="15" uuid="70e60854-dd48-4fef-8a81-7c7bc40b9b92"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{CountEstadoCorrienteF}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="527" y="31" width="63" height="15" uuid="a0126d28-df7b-4eb4-968a-141558fc98b3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{SumTEstadoPagado}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="527" y="46" width="63" height="15" uuid="4fd01764-a750-45cb-86a2-6c7e9da5c349"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{SumTEstadoVencida}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="652" y="16" width="60" height="15" uuid="f5fb6ca0-9c9f-413e-a5f2-4e9320b0a4c1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Saldo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="590" y="16" width="62" height="15" uuid="3750f1a2-d667-43eb-b224-52a482e59fb8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Pagado]]></text>
+			</staticText>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="652" y="31" width="60" height="15" uuid="fb4b6de4-31bf-4f1a-be57-91af73ad8486"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{SumSEstadoPagada}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="652" y="46" width="60" height="15" uuid="dd18b63e-a896-4b52-a663-b20e7620dd4a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{SumSEstadoVencida}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="652" y="61" width="60" height="15" uuid="4e9eae54-d2ee-45a8-9cb9-b0ecb3274430"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{SumSEstadoCorriente}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="652" y="76" width="60" height="15" uuid="878fd5ab-be2f-4d51-bb41-d8094db7a540"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{SumSEstadoCorrienteF}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="652" y="91" width="60" height="15" uuid="4628c6c8-3732-40f6-8c89-cdbb853cd255"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{TotalSaldoEstado}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="590" y="31" width="62" height="15" uuid="048afdba-9c1a-4b46-bc0e-f81ffe9f90dc"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{SumPEstadoPagada}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="590" y="46" width="62" height="15" uuid="9adfe1f4-cfc9-4c31-8b31-d7e339b135c9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{SumPEstadoVencida}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="590" y="61" width="62" height="15" uuid="793ac773-c8f3-41f0-817d-1394f51170ac"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{SumPEstadoCorriente}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="590" y="76" width="62" height="15" uuid="60dab127-bd79-435d-aebe-176ed95d2d72"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{SumPEstadoCorrienteF}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="590" y="91" width="62" height="15" uuid="35d90583-08ab-44a0-bafd-e03878d93769"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{TotalPagadoEstado}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

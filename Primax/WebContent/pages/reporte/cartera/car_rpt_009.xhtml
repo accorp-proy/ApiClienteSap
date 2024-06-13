@@ -1,0 +1,47 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+	<ui:define name="content">
+		<h:form id="frm_car_rpt_008">
+			<p:fieldset legend="Filtros de búsqueda" toggleable="true"
+				toggleSpeed="500">
+				<p:panelGrid id="pnlGrid" style="width:100%" styleClass="fullSize"
+					columns="5"
+					columnClasses="ui-grid-col-2,ui-grid-col-2,ui-grid-col-2"
+					layout="grid">
+					<p:selectOneMenu converter="#{empresaConverter}"
+						value="#{BusquedaBn.empresaSeleccionada}">
+						<f:selectItem itemLabel="Empresa" />
+						<f:selectItems value="#{BusquedaBn.empresas}" var="empresa"
+							itemLabel="#{empresa.descripcion}" itemValue="#{empresa}"></f:selectItems>
+						<p:ajax process="@this" event="change"></p:ajax>
+					</p:selectOneMenu>
+					<p:outputLabel value="Fecha Corte: " />
+					<p:calendar id="calendarDesde" navigator="true" pattern="dd/MM/yyy"
+						value="#{BusquedaBn.fechaSeleccionadaDesde}" readonlyInput="true">
+						<p:ajax event="dateSelect" process="@this calendarDesde"></p:ajax>
+					</p:calendar>
+					<div align="right">
+						<p:commandButton icon="ui-icon-picture-as-pdf" update="pnl_rep"
+							process="@this frm_car_rpt_008" immediate="true"
+							action="#{ReporteBn.imprimirPdf()}"></p:commandButton>
+						<p:commandButton icon="fa fa-file-excel-o" ajax="false"
+							immediate="true"
+							actionListener="#{ReporteBn.imprimirExcel(9,appMain.usuario.nombreUsuario,BusquedaBn.empresaSeleccionada.idEmpresa,BusquedaBn.fechaDesdeTexto,null,null,null,null,null,null,null)}">
+							<p:fileDownload value="#{appMain.download}"></p:fileDownload>
+						</p:commandButton>
+					</div>
+				</p:panelGrid>
+				<p:panelGrid id="pnl_rep" styleClass="sinborde" style="width:100%">
+					<p:column>
+						<iframe height="300%" width="100%"
+							src="#{request.contextPath}/reporte?rptid=9&amp;p1=#{appMain.usuario.nombreUsuario}&amp;p2=#{BusquedaBn.empresaSeleccionada.idEmpresa}&amp;p3=#{BusquedaBn.fechaDesdeTexto}"></iframe>
+					</p:column>
+				</p:panelGrid>
+			</p:fieldset>
+		</h:form>
+	</ui:define>
+</ui:composition>

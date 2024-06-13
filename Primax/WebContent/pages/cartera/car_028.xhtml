@@ -1,0 +1,142 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+	<ui:define name="title">Configuración de Días Vencidos Cartera [car_-028]</ui:define>
+	<ui:define name="content">
+		<h:form id="frm_car_028">
+			<p:growl showDetail="true" id="mensajes">
+			</p:growl>
+			<div align="center">
+				<h2>Configuración Resumen Cartera</h2>
+			</div>
+			<div class="ui-g-12 ui-lg-3">
+				<div class="card">
+					<p:menu toggleable="true" style="width:100%">
+						<p:submenu label="Empresas" icon="fa fa-compress">
+							<c:forEach items="#{configuracionResumenCarteraBn.empresas}"
+								var="empresa">
+								<p:menuitem value="#{empresa.descripcion}"
+									action="#{configuracionResumenCarteraBn.consultarCompaniaVirtual(empresa)}"
+									update="frm_car_028:dtbCompaniaVirtual" />
+							</c:forEach>
+						</p:submenu>
+					</p:menu>
+					<p:separator />
+					<p:dataTable id="dtbCompaniaVirtual" tableStyle="table-layout:auto"
+						emptyMessage="Registro no encontrado" style="margin-bottom:10px"
+						reflow="true"
+						value="#{configuracionResumenCarteraBn.companiasVirtual}"
+						var="companiaVirtual"
+						rowKey="#{companiaVirtual.idCompaniaVirtual}" scrollable="true"
+						scrollHeight="184" selectionMode="single"
+						selection="#{configuracionResumenCarteraBn.companiaVirtualSeleccionado}">
+						<p:ajax event="rowSelect" process="@this dtbCompaniaVirtual"
+							immediate="true" update="frm_car_028:dtbConfiguracion"
+							listener="#{configuracionResumenCarteraBn.presentarConfiguracion(companiaVirtual)}"></p:ajax>
+						<p:column headerText="Compañia Virtual">
+							<h:outputText value="#{companiaVirtual.descripcion}" />
+						</p:column>
+					</p:dataTable>
+				</div>
+			</div>
+			<div class="ui-g-12 ui-lg-9">
+				<div class="card" style="height: 380px">
+					<p:panelGrid columns="4" layout="grid" style="width:100%"
+						styleClass="ui-panelgrid-blank form-group"></p:panelGrid>
+					<p:dataTable id="dtbConfiguracion" paginator="true" rows="6"
+						tableStyle="table-layout:auto" paginatorPosition="bottom"
+						emptyMessage="Registro no encontrado" style="margin-bottom:10px"
+						reflow="true"
+						value="#{configuracionResumenCarteraBn.configuracionesResumenCartera}"
+						var="configuracion">
+						<f:facet name="header">
+							<h:outputText value="Días Vencimientos" />
+							<div align="right">
+								<p:commandButton icon="ui-icon-plus" process="@this"
+									update=":frm_car_015" oncomplete="PF('dlg_car_015').show()"
+									action="#{configuracionResumenCarteraBn.inicializarObj()}"
+									title="Agregar"></p:commandButton>
+							</div>
+						</f:facet>
+						<p:columnGroup type="header">
+							<p:row>
+								<p:column rowspan="2" headerText="Días Vencimientos" />
+								<p:column colspan="5" headerText="Gestión a Realizar" />
+							</p:row>
+							<p:row>
+								<p:column headerText="Email" />
+								<p:column headerText="LLamada" />
+								<p:column headerText="Visita" />
+								<p:column headerText="Mensaje Texto" />
+								<p:column headerText="Acción" />
+							</p:row>
+						</p:columnGroup>
+						<p:column headerText="Gestión a Realizar">
+							<h:outputText
+								value="#{configuracion.descripcion} #{configuracion.diaVencidoDesde} - #{configuracion.diaVencidoHasta} Días"
+								rendered="#{configuracion.diaVencidoHasta ne 0}" />
+							<h:outputText
+								value="#{configuracion.descripcion} #{configuracion.diaVencidoDesde} Días"
+								rendered="#{configuracion.diaVencidoHasta eq 0}" />
+						</p:column>
+						<p:column>
+							<h:outputText value="SI"
+								rendered="#{configuracion.correo eq true}" />
+							<h:outputText value="NO"
+								rendered="#{configuracion.correo eq false}" />
+						</p:column>
+						<p:column>
+							<h:outputText value="SI"
+								rendered="#{configuracion.llamada eq true}" />
+							<h:outputText value="NO"
+								rendered="#{configuracion.llamada eq false}" />
+						</p:column>
+						<p:column>
+							<h:outputText value="SI"
+								rendered="#{configuracion.visita eq true}" />
+							<h:outputText value="NO"
+								rendered="#{configuracion.visita eq false}" />
+						</p:column>
+						<p:column>
+							<h:outputText value="SI"
+								rendered="#{configuracion.mensajeTexto eq true}" />
+							<h:outputText value="NO"
+								rendered="#{configuracion.mensajeTexto eq false}" />
+						</p:column>
+						<p:column headerText="Acción">
+							<div align="center">
+								<p:commandButton icon="ui-icon-update" process="@this"
+									update=":frm_car_015" oncomplete="PF('dlg_car_015').show()"
+									title="Editar"
+									action="#{configuracionResumenCarteraBn.modificar(configuracion)}"></p:commandButton>
+								<p:commandButton icon="ui-icon-trash" title="Eliminar"
+									onclick="PF('dlg_conf_0').show()"
+									action="#{configuracionResumenCarteraBn.seleccionarEliminar(configuracion)}">
+								</p:commandButton>
+							</div>
+						</p:column>
+					</p:dataTable>
+				</div>
+			</div>
+		</h:form>
+		<ui:include src="/pages/cartera/car_015.xhtml" />
+		<p:confirmDialog widgetVar="dlg_conf_0" header="Confirmar"
+			appendTo="@(body)" message="Esta seguro que desea Eliminar registro"
+			severity="alert" closeOnEscape="true" showEffect="fade"
+			hideEffect="fade">
+			<div align="center">
+				<p:commandButton styleClass="ui-confirmdialog-no"
+					icon="ui-icon-close" value="Cancelar" immediate="true"
+					oncomplete="PF('dlg_conf_0').hide()"></p:commandButton>
+				<p:commandButton value="Aceptar" styleClass="ui-confirmdialog-yes"
+					immediate="true" icon="ui-icon-check" update="frm_car_028"
+					oncomplete="PF('dlg_conf_0').hide()"
+					action="#{configuracionResumenCarteraBn.guardarEliminado()}"
+					process="@this"></p:commandButton>
+			</div>
+		</p:confirmDialog>
+	</ui:define>
+</ui:composition>

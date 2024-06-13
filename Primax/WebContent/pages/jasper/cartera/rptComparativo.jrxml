@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptComparativo" language="groovy" pageWidth="887" pageHeight="802" columnWidth="887" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="fde65d2a-3f2c-4dff-83ca-218d07410a49">
+	<property name="ireport.zoom" value="3.0"/>
+	<property name="ireport.x" value="1664"/>
+	<property name="ireport.y" value="0"/>
+	<property name="net.sf.jasperreports.export.xls.detect.cell.type" value="true"/>
+	<parameter name="par_id_comparativo" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select
+com.id_comparativo_general as id,
+cli.id_cliente_jde as idClienteJde,
+cli.nombre_alfa as nombreAlfa,
+com.fecha_emision as fechaEmision,
+com.tipo_documento as tipoDocumento,
+com.nro_documento  as nroDocumento,
+com.valor_total as valorTotal,
+com.valor_pendiente as valorPendiente,
+com.comparacion ,
+com.valor_diferencia as valorDiferencia
+from comparativo_general_et com
+inner join cliente_et cli
+on com.id_cliente_jde = cli.id_cliente_jde
+where com.id_comparativo = $P{par_id_comparativo}
+and cli.id_empresa = 2
+and cli.estado = 'ACT']]>
+	</queryString>
+	<field name="id" class="java.lang.Long"/>
+	<field name="idclientejde" class="java.lang.Long"/>
+	<field name="nombrealfa" class="java.lang.String"/>
+	<field name="fechaemision" class="java.sql.Timestamp"/>
+	<field name="tipodocumento" class="java.lang.String"/>
+	<field name="nrodocumento" class="java.lang.String"/>
+	<field name="valortotal" class="java.lang.Double"/>
+	<field name="valorpendiente" class="java.lang.Double"/>
+	<field name="comparacion" class="java.lang.String"/>
+	<field name="valordiferencia" class="java.lang.Double"/>
+	<variable name="valorpendiente_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{valorpendiente}]]></variableExpression>
+	</variable>
+	<variable name="valortotal_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{valortotal}]]></variableExpression>
+	</variable>
+	<variable name="valordiferencia_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{valordiferencia}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="15" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="508" y="0" width="75" height="15" backcolor="#FF6600" uuid="85abc268-acdd-4d78-b9e7-c4750b21b935"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA EMISION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="431" y="0" width="77" height="15" backcolor="#FF6600" uuid="4cb8bd1a-3f9d-4071-9536-b7579ebaadef"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NUM DOC]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="60" height="15" backcolor="#FF6600" uuid="5b0832e2-4cf3-4302-af10-6dae611d70cf"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[COD CLIENTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="653" y="0" width="82" height="15" backcolor="#FF6600" uuid="d39a72b0-ee42-4ade-b03d-99082f41f5f1"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[VALOR PENDIENTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="372" y="0" width="59" height="15" backcolor="#FF6600" uuid="4d7546b3-4c43-4155-a307-b495af96e79b"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TIP DOC]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="60" y="0" width="312" height="15" backcolor="#FF6600" uuid="2d03d33e-4eca-4a88-acba-b9ec63deba35"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NOMBRE ALFA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="583" y="0" width="70" height="15" backcolor="#FF6600" uuid="365d93f8-4a24-493f-b218-7446d3266604"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[VALOR TOTAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="735" y="0" width="82" height="15" backcolor="#FF6600" uuid="d363edf3-f5b9-4e2d-8877-68f725858288"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[COMPARATIVO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="817" y="0" width="70" height="15" backcolor="#FF6600" uuid="19b67cf3-2358-413f-858e-41811e95aca7"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DIFERENCIA]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="60" height="15" uuid="70f8a14c-d087-47b1-8581-8ab6a7ce555d"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{idclientejde}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="60" y="0" width="312" height="15" uuid="0f3747ea-14ac-4d16-9cf3-6611c970cc6d"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombrealfa}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="372" y="0" width="59" height="15" uuid="efc8e7bc-040b-4dbb-8c85-3163674fb949"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tipodocumento}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="431" y="0" width="77" height="15" uuid="51809aad-3cd3-4758-9a1a-da00e667f530"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nrodocumento}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="508" y="0" width="75" height="15" uuid="8c47af2a-b907-4d10-aa91-8bdd7a6cf2fc"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fechaemision}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00" isBlankWhenNull="true">
+				<reportElement x="583" y="0" width="70" height="15" uuid="62571344-315b-48e5-9fde-ca2a5d104686"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valortotal}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00" isBlankWhenNull="true">
+				<reportElement x="653" y="0" width="82" height="15" uuid="e6802c42-5441-4a17-a28d-0b1b8c24dcbc"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valorpendiente}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="735" y="0" width="82" height="15" uuid="8e063856-26eb-41ea-bcb0-33cecd425287"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{comparacion}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00" isBlankWhenNull="true">
+				<reportElement x="817" y="0" width="70" height="15" uuid="79fa34ca-f339-4b40-8df4-fd166b3bcd53"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valordiferencia}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="15" splitType="Stretch">
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="653" y="0" width="82" height="15" uuid="0662bc1f-39ed-4b02-8dd1-fe5b508b3a59"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{valorpendiente_1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="583" y="0" width="70" height="15" uuid="236631ec-4bf9-4ece-ad14-8e514fd91b0b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{valortotal_1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="817" y="0" width="70" height="15" uuid="c4d142ed-e613-48eb-bc37-129417bb3331"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{valordiferencia_1}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptSubEstadoCuentaPersonaResumen" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="c14c0d26-c39c-4405-a8c3-ddba1cf4bbc9">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="par_fecha_corte" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="par_id_persona" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select
+con.id_configuracion_resumen_cartera as idConfiguracionResumen,
+res.id_persona as idPersona,
+res.fecha_corte as fechaCorte,
+(CASE WHEN  con.dia_vencido_hasta = 0 then (' '||'VENCIDO MAS'||'  '|| con.dia_vencido_desde ||'   '||'DIAS') else
+   (' '||'VENCIDO'||'  '|| con.dia_vencido_desde ||'  - '|| con.dia_vencido_hasta ||'   '||'DIAS') end
+ )as descripcion,
+res.valor_corriente as valorCorriente,
+res.valor_vencido as valorVencido,
+res.valor_nota_credito as valorNotaCredito
+from configuracion_resumen_cartera_et con
+inner join estado_cuenta_cliente_resumen_et res
+on con.id_configuracion_resumen_cartera = res.id_configuracion_resumen_cartera
+where res.id_persona = $P{par_id_persona}
+and   res.fecha_corte = to_date($P{par_fecha_corte},'DD/MM/YYYY')
+order by con.dia_vencido_desde;]]>
+	</queryString>
+	<field name="idconfiguracionresumen" class="java.lang.Long"/>
+	<field name="idpersona" class="java.lang.Long"/>
+	<field name="fechacorte" class="java.sql.Timestamp"/>
+	<field name="descripcion" class="java.lang.String"/>
+	<field name="valorcorriente" class="java.lang.Double"/>
+	<field name="valorvencido" class="java.lang.Double"/>
+	<field name="valornotacredito" class="java.lang.Double"/>
+	<variable name="corriente" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[($F{valorcorriente} - $F{valornotacredito})]]></variableExpression>
+	</variable>
+	<variable name="vencido" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{valorvencido}]]></variableExpression>
+	</variable>
+	<variable name="total" class="java.lang.Double">
+		<variableExpression><![CDATA[($V{corriente} + $V{vencido})]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="30" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="260" height="15" uuid="29cbb424-106f-484c-8d84-320baa819416"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ RESUMEN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="15" width="206" height="15" uuid="279f17fc-fe2d-4462-bab3-607e9fbfc7fc"/>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ CORRIENTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="206" y="15" width="10" height="15" uuid="8d8a8a3c-cdb3-4dbf-b08f-3fbf5c0a80a1"/>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[$]]></text>
+			</staticText>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="216" y="15" width="44" height="15" uuid="0be34696-d079-4f75-9f42-e98bb9139382"/>
+				<box>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valorcorriente}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="206" height="15" uuid="29d9c950-a9eb-4fbc-b6c0-5a5f07d6b504"/>
+				<box>
+					<leftPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{descripcion}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="206" y="0" width="10" height="15" uuid="742546a6-4e09-4d3e-bcb9-64315e6f0482"/>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[$]]></text>
+			</staticText>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="216" y="0" width="44" height="15" uuid="45d87f78-1352-46cf-b210-065f5a08799c"/>
+				<box>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valorvencido}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="16" splitType="Stretch">
+			<staticText>
+				<reportElement x="206" y="0" width="10" height="16" uuid="6b9dc329-5904-4d91-826c-ab7cb008cbf3"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[$]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="206" height="16" uuid="41d8f467-c3dc-43e1-8923-d60487efdb92"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL]]></text>
+			</staticText>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="216" y="0" width="44" height="16" uuid="cddf6d62-e9c1-40c1-ad55-31aed10fa61e"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{total}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

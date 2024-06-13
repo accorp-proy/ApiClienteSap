@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="comprobantePago" pageWidth="595" pageHeight="425" whenNoDataType="AllSectionsNoDetail" columnWidth="523" leftMargin="36" rightMargin="36" topMargin="0" bottomMargin="0" uuid="a10bde68-bc72-4b4a-a822-f65ab63f5756">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Siiap"/>
+	<parameter name="idPago" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\Users\\SKINET\\Desktop\\"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select pcc.id_pago_cartera_comprobante,
+       per.nombre_completo,
+       per.per_identificacion,
+       per.direccion_domicilio,
+       pcc.fecha_pago,
+       fc.fecha_emision,
+       pcc.valor_anterior,
+       pcc.valor,
+       pcc.saldo,
+       fc.valor_total
+         from pago_cartera_comprobante_et pcc
+         inner join factura_cartera_et fc
+         on pcc.id_factura_cartera = fc.id_factura_cartera
+         inner join cliente_et cli
+         on fc.id_cliente = cli.id_cliente
+         inner join persona_et per
+         on cli.id_persona = per.id_persona
+       where pcc.id_pago_cartera_comprobante = $P{idPago}]]>
+	</queryString>
+	<field name="id_pago_cartera_comprobante" class="java.lang.Long"/>
+	<field name="nombre_completo" class="java.lang.String"/>
+	<field name="per_identificacion" class="java.lang.String"/>
+	<field name="direccion_domicilio" class="java.lang.String"/>
+	<field name="fecha_pago" class="java.sql.Timestamp"/>
+	<field name="fecha_emision" class="java.sql.Timestamp"/>
+	<field name="valor_anterior" class="java.lang.Double"/>
+	<field name="valor" class="java.lang.Double"/>
+	<field name="saldo" class="java.lang.Double"/>
+	<field name="valor_total" class="java.lang.Double"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="13" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="523" height="13" uuid="5903b45a-85b1-483c-9f8a-40081c2e66f7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PRIMAX]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="71" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="523" height="13" uuid="1844ecf1-568c-43a6-bd33-022b3f636aec"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RUC. 1791408683001]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="13" width="523" height="26" uuid="61e598a4-d9d2-4e93-aac8-b135a884c289"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Av Juan Tanca Marengo 2.5k Y Av. Jaime Roldos
+Frente A Galauto - Avenida Juan Tanca Marengo 2]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="39" width="523" height="13" uuid="4ac50404-8d68-4f6e-a3da-ae8938ba5b25"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TELEFONOS: (042) 59 0230 - (023) 95 8440]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="0" y="58" width="523" height="13" forecolor="#000000" backcolor="#FFFFFF" uuid="f978b72f-d277-49fe-847a-acbc56b5ad8a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="9" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["COMPROBANTE: "+String.format("%010d",$P{idPago})]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="205" splitType="Stretch">
+			<staticText>
+				<reportElement x="183" y="11" width="87" height="13" uuid="e565bd78-bb23-457d-aa4f-d34947345bd4"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Nombres:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="183" y="24" width="87" height="13" uuid="4af402e4-df68-46a9-b27f-14732aa0e4a8"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Cédula / Ruc:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="183" y="37" width="87" height="13" uuid="1904de6b-be8f-405f-9fa5-6ce738fbbecb"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Dirección:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="183" y="50" width="87" height="13" uuid="343b2b8a-d939-41dc-9f65-ca873190a576"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Fecha de Emision:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="183" y="63" width="87" height="13" uuid="cba03ef8-2eab-482c-9743-0a2461d07662"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Fecha de Pago]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="94" width="523" height="1" uuid="8c944058-5d05-4375-9b45-3fc089f89db4"/>
+			</line>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="271" y="11" width="185" height="13" forecolor="#000000" backcolor="#FFFFFF" uuid="066e30d5-fba5-4d9d-9a93-4d596b6c53b8"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombre_completo}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="271" y="24" width="185" height="13" forecolor="#000000" backcolor="#FFFFFF" uuid="dd85c7d1-2ee0-4e31-8eba-aa41aa95d674"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{per_identificacion}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="271" y="37" width="185" height="13" forecolor="#000000" backcolor="#FFFFFF" uuid="fac8d96d-7ae8-4b1d-b721-b04e7c195cd4"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{direccion_domicilio}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="271" y="50" width="185" height="13" forecolor="#000000" backcolor="#FFFFFF" uuid="b110ee72-18e4-427a-bf06-cab1eddadeed"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fecha_emision}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="271" y="63" width="185" height="13" forecolor="#000000" backcolor="#FFFFFF" uuid="c5530aa3-de61-4d5f-9364-e0fee6a0b0db"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fecha_pago}]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement x="128" y="115" width="328" height="89" uuid="2c19c737-6aa1-496e-a443-bd26b7ac789b"/>
+				<subreportParameter name="id_pago">
+					<subreportParameterExpression><![CDATA[$F{id_pago_cartera_comprobante}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "comprobantePagoDetalle.jasper"]]></subreportExpression>
+			</subreport>
+			<staticText>
+				<reportElement x="183" y="76" width="87" height="13" uuid="e16d86dc-d36e-4dfa-9257-3d0a20006397"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Facturado]]></text>
+			</staticText>
+			<textField pattern="#,##0.00">
+				<reportElement x="270" y="76" width="186" height="13" uuid="8f269b41-8c86-4cb8-b55c-6963b08a014b"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valor_total}]]></textFieldExpression>
+			</textField>
+			<textField pattern="$ #,##0.00" isBlankWhenNull="true">
+				<reportElement x="270" y="96" width="145" height="13" uuid="78b5859a-a666-4973-846a-27702cf4aa79"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valor_anterior}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="128" y="96" width="142" height="13" uuid="c7bf869a-2171-4740-b5a0-23ff2516dc48"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Saldo Anterior:]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<summary>
+		<band height="39">
+			<textField pattern="$ #,##0.00" isBlankWhenNull="true">
+				<reportElement x="184" y="26" width="64" height="13" uuid="62e8bec9-0cde-4bbf-983a-5a9c745a0977"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{valor}]]></textFieldExpression>
+			</textField>
+			<textField pattern="$ #,##0.00" isBlankWhenNull="true">
+				<reportElement x="282" y="26" width="62" height="13" uuid="2d5a12c7-0ffb-4186-82a4-9d2486fb2c7a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{saldo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="248" y="26" width="34" height="13" uuid="31505933-1b8f-4005-a3c9-7684fdc63f85"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Saldo:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="146" y="26" width="38" height="13" uuid="e68dcbb9-e941-47e5-949b-bdb945d3d86e"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Abono:]]></text>
+			</staticText>
+			<textField pattern="yyyy-MM-dd hh:mm:ss" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="146" y="0" width="102" height="13" forecolor="#000000" backcolor="#FFFFFF" uuid="10b75160-0e04-4baf-becf-ed8d93af1b45"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fecha_pago}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="248" y="0" width="151" height="13" forecolor="#000000" backcolor="#FFFFFF" uuid="596895ec-ae49-4904-9ae2-9353eb32eaa0"/>
+				<textElement verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["COMPROBANTE: "+String.format("%010d",$P{idPago})]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="146" y="13" width="253" height="13" forecolor="#000000" backcolor="#FFFFFF" uuid="35ea7012-0fa5-4f46-b8e6-dc204031ccec"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombre_completo}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

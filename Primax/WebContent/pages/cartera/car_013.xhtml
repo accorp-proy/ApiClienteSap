@@ -1,0 +1,198 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+	<p:dialog widgetVar="dlg_car_013" id="dlg_car_013" responsive="true"
+		appendTo="@(body)" resizable="false">
+		<f:facet name="header">
+			<h:outputLabel value="Pagos Realizados " />
+			<p:outputLabel value="car_013.xhtml"
+				rendered="#{appMain.usuario.idUsuario eq 1}"></p:outputLabel>
+		</f:facet>
+		<h:form id="frm_car_013">
+			<p:growl autoUpdate="true"></p:growl>
+			<p:fieldset legend="Información Cliente">
+				<div class="ui-fluid">
+					<p:panelGrid columns="3" layout="grid"
+						styleClass="ui-panelgrid-blank form-group"
+						columnClasses="ui-grid-col-6,ui-grid-col-6">
+						<h:panelGroup styleClass="md-inputfield">
+							<p:inputText readonly="true"
+								value="#{facturaCarteraBn.facturaCarteraSeleccionada.cliente.persona.identificacionPersona}"></p:inputText>
+							<label>Identificación</label>
+						</h:panelGroup>
+						<h:panelGroup styleClass="md-inputfield">
+							<p:inputText readonly="true"
+								value="#{facturaCarteraBn.facturaCarteraSeleccionada.cliente.persona.nombreCompleto}"></p:inputText>
+							<label>Razón Social</label>
+						</h:panelGroup>
+						<h:panelGroup styleClass="md-inputfield">
+							<p:inputText readonly="true"
+								value="#{facturaCarteraBn.facturaCarteraSeleccionada.cliente.limiteCredito}"></p:inputText>
+							<label>Límite de Credito</label>
+						</h:panelGroup>
+						<h:panelGroup styleClass="md-inputfield">
+							<p:inputText readonly="true"
+								value="#{facturaCarteraBn.facturaCarteraSeleccionada.cliente.persona.nombreComercial}"></p:inputText>
+							<label>Nombre Comercial</label>
+						</h:panelGroup>
+						<h:panelGroup styleClass="md-inputfield">
+							<p:inputText readonly="true"
+								value="#{facturaCarteraBn.facturaCarteraSeleccionada.cliente.persona.telefonoConvencional}"></p:inputText>
+							<label>Teléfono</label>
+						</h:panelGroup>
+						<h:panelGroup styleClass="md-inputfield">
+							<p:inputText readonly="true"
+								value="#{facturaCarteraBn.facturaCarteraSeleccionada.cliente.persona.email}"></p:inputText>
+							<label>Correo</label>
+						</h:panelGroup>
+					</p:panelGrid>
+					<p:tabView id="tabViewResumen">
+						<div class="ui-fluid">
+							<p:tab title="jems">
+								<f:facet name="title">
+									<p:outputLabel value="Facturas"></p:outputLabel>
+									<p:graphicImage value="/resources/images/iconos/factura.png" />
+								</f:facet>
+								<p:dataTable id="dtbFacturaCarteraDetalle" reflow="true"
+									tableStyle="table-layout:auto" paginator="true" rows="3"
+									paginatorPosition="bottom" emptyMessage="No existen Facturas "
+									responsive="true"
+									selection="#{facturaCarteraBn.facturaCarteraDetalleSeleccionada}"
+									value="#{facturaCarteraBn.facturaCarteraSeleccionada.facturaCarteraDetalle}"
+									var="facturaCarteraDetalle"
+									rowKey="#{facturaCarteraDetalle.idFacturaCarteraDetalle}">
+									<f:facet name="header">
+										<h:outputText value="Pagos Facturas" />
+									</f:facet>
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="Nro Documento" />
+										</f:facet>
+										<h:outputText value="#{facturaCarteraDetalle.nroFactura}" />
+									</p:column>
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="Secuencia" />
+										</f:facet>
+										<h:outputText value="#{facturaCarteraDetalle.secuencia}" />
+									</p:column>
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="Tipo Documento" />
+										</f:facet>
+										<h:outputText
+											value="#{facturaCarteraDetalle.tipoDocumento.idTipoDocumentoJDE}" />
+									</p:column>
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="Fecha Vencimiento" />
+										</f:facet>
+										<h:outputText
+											value="#{facturaCarteraDetalle.fechaVencimiento}">
+											<f:convertDateTime pattern="dd-MM-yyyy" />
+										</h:outputText>
+									</p:column>
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="Valor Pendiente" />
+										</f:facet>
+										<h:outputText value="#{facturaCarteraDetalle.valorSaldo}" />
+									</p:column>
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="Valor Total" />
+										</f:facet>
+										<h:outputText value="#{facturaCarteraDetalle.valorTotal}" />
+									</p:column>
+									<p:column headerText="Estado">
+										<h:outputText
+											value="#{facturaCarteraDetalle.tipoEstadoCobranzaCartera.descripcion}"></h:outputText>
+									</p:column>
+									<p:column headerText="Pago">
+										<p:commandButton icon="fa fa-usd" update=":frm_car_014"
+											action="#{facturaCarteraBn.pagosRealizados(facturaCarteraDetalle)}"
+											oncomplete="PF('dlg_car_014').show()" title="Pagos"></p:commandButton>
+									</p:column>
+								</p:dataTable>
+							</p:tab>
+						</div>
+						<p:tab>
+							<f:facet name="title">
+								<p:outputLabel value="Gestión "></p:outputLabel>
+								<p:graphicImage value="/resources/images/iconos/gestion.png" />
+							</f:facet>
+							<p:dataTable id="dtbFacturaCarteraGestion" reflow="true"
+								tableStyle="table-layout:auto" paginator="true" rows="3"
+								paginatorPosition="bottom" emptyMessage="No existen Gestiones "
+								responsive="true"
+								value="#{facturaCarteraBn.facturaCarteraSeleccionada.gestionClienteCartera}"
+								var="gestion" rowKey="#{gestion.idGestionClienteCartera}">
+								<f:facet name="header">
+									<h:outputText value="Gestiones Realizadas" />
+								</f:facet>
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="Tipo Gestión" />
+									</f:facet>
+									<h:outputText value="#{gestion.tipoGestionCartera.descripcion}" />
+								</p:column>
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="Tipo Documento" />
+									</f:facet>
+									<h:outputText value="#{gestion.correo}"
+										rendered="#{gestion.tipoGestionCartera.descripcion eq 'EMAIL'}" />
+									<h:outputText value="#{gestion.telefono}"
+										rendered="#{gestion.tipoGestionCartera.descripcion eq 'LLAMADA'}" />
+									<h:outputText value="#{gestion.lugarVisita}"
+										rendered="#{gestion.tipoGestionCartera.descripcion eq 'VISITA'}" />
+									<h:outputText value="#{gestion.telefono}"
+										rendered="#{gestion.tipoGestionCartera.descripcion eq 'SMS'}" />
+								</p:column>
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="Fecha Gestión" />
+									</f:facet>
+									<h:outputText value="#{gestion.fechaGestion}">
+										<f:convertDateTime pattern="dd-MM-yyyy" />
+									</h:outputText>
+								</p:column>
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="Hora" />
+									</f:facet>
+									<h:outputText value="#{gestion.horaGestion}">
+										<f:convertDateTime pattern="HH:mm:ss" />
+									</h:outputText>
+								</p:column>
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="Conesto" />
+									</f:facet>
+									<h:outputText value="#{gestion.contesto}" />
+								</p:column>
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="Llego Acuerdo Pago" />
+									</f:facet>
+									<h:outputText value="#{gestion.acuerdoPago}" />
+								</p:column>
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="Observación" />
+									</f:facet>
+									<h:outputText value="#{gestion.observacion}" />
+								</p:column>
+							</p:dataTable>
+						</p:tab>
+					</p:tabView>
+				</div>
+			</p:fieldset>
+
+		</h:form>
+		<ui:include src="/pages/cartera/car_014.xhtml" />
+	</p:dialog>
+</ui:composition>

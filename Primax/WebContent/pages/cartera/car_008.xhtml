@@ -1,0 +1,48 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+	<p:dialog widgetVar="dlg_car_008" id="dlg_car_008" responsive="true"
+		appendTo="@(body)" resizable="false" hideEffect="scale">
+		<f:facet name="header">
+			<h:outputLabel value="Ingreso Contacto " />
+			<p:outputLabel value="car_008.xhtml"
+				rendered="#{appMain.usuario.idUsuario eq 1}"></p:outputLabel>
+		</f:facet>
+		<h:form id="frm_car_008">
+			<p:growl autoUpdate="true"></p:growl>
+			<div align="right">
+				<p:commandButton icon="ui-icon-save"
+					update=":frm_car_002:tabView_00:dtbContacto" styleClass="secondary"
+					action="#{clienteBn.agregarContacto()}" title="Guardar">
+				</p:commandButton>
+			</div>
+			<div class="ui-fluid">
+				<p:panelGrid id="pnlGrid_02" columns="1"
+					columnClasses="ui-grid-col-12" layout="grid"
+					styleClass="ui-panelgrid-blank">
+					<p:inputText title="Identificación " maxlength="20" required="true"
+						placeholder="Identificación" requiredMessage="Identificación"
+						value="#{clienteBn.personaContactoSeleccionado.identificacion}" />
+					<p:inputText title="Nombre " maxlength="20" required="true"
+						placeholder="Nombre" requiredMessage="Nombre"
+						value="#{clienteBn.personaContactoSeleccionado.nombreCompleto}" />
+					<p:inputText title="Dirección " maxlength="20" required="true"
+						placeholder="Dirección" requiredMessage="Dirección"
+						value="#{clienteBn.personaContactoSeleccionado.direccion}" />
+					<p:inputText title="Correo " maxlength="20" required="true"
+						placeholder="Correo" requiredMessage="Correo"
+						value="#{clienteBn.personaContactoSeleccionado.email}" />
+					<p:inputText title="Teléfono " maxlength="20" required="true"
+						placeholder="Teléfono" requiredMessage="Teléfono"
+						value="#{clienteBn.personaContactoSeleccionado.telefono}" />
+					<p:inputText title="Celular " maxlength="20" required="true"
+						placeholder="Celular" requiredMessage="Celular"
+						value="#{clienteBn.personaContactoSeleccionado.celular}" />
+				</p:panelGrid>
+			</div>
+		</h:form>
+	</p:dialog>
+</ui:composition>

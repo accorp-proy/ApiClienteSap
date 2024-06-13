@@ -1,0 +1,47 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+	<p:dialog widgetVar="dlg_car_007" id="dlg_car_007" responsive="true"
+		appendTo="@(body)" resizable="false" hideEffect="scale">
+		<f:facet name="header">
+			<h:outputLabel value="Ingreso Producto" />
+		</f:facet>
+		<h:form id="frm_car_007">
+			<p:growl autoUpdate="true"></p:growl>
+			<div align="right">
+				<p:commandButton icon="ui-icon-save" update=":frm_car_006"
+					styleClass="secondary"
+					action="#{productoCarteraCobranzaBn.guardar()}" title="Guardar">
+				</p:commandButton>
+			</div>
+			<div class="ui-fluid">
+				<p:panelGrid id="pnlGrid_02" columns="4"
+					columnClasses="ui-grid-col-4" layout="grid"
+					styleClass="ui-panelgrid-blank">
+					<p:inputText title="Código JDE" maxlength="20" required="true"
+						placeholder="Código JDE" requiredMessage="Código JDE"
+						value="#{productoCarteraCobranzaBn.productoCarteraCobranzaSeleccionada.idCompaniaVirtualJDE}" />
+					<p:selectOneMenu editable="false" required="true"
+						requiredMessage="seleccione  Empresa"
+						converter="#{empresaConverter}"
+						value="#{productoCarteraCobranzaBn.productoCarteraCobranzaSeleccionada.empresa}">
+						<f:selectItem itemLabel="Seleccione" />
+						<f:selectItems value="#{productoCarteraCobranzaBn.empresas}"
+							var="empresa" itemLabel="#{empresa.descripcion}"
+							itemValue="#{empresa}"></f:selectItems>
+					</p:selectOneMenu>
+				</p:panelGrid>
+				<p:panelGrid columns="1" columnClasses="ui-grid-col-12"
+					layout="grid" styleClass="ui-panelgrid-blank">
+					<p:inputText placeholder="Descripción Producto"
+						title="Descripción Producto" required="true"
+						requiredMessage="Descripción Producto"
+						value="#{productoCarteraCobranzaBn.productoCarteraCobranzaSeleccionada.descripcion}" />
+				</p:panelGrid>
+			</div>
+		</h:form>
+	</p:dialog>
+</ui:composition>

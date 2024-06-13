@@ -1,0 +1,48 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+	<p:dialog widgetVar="dlg_car_024" id="dlg_car_024" responsive="true"
+		appendTo="@(body)" resizable="false" hideEffect="scale" width="450px">
+		<f:facet name="header">
+			<h:outputLabel value="Busqueda Ejecutivo Comercial " />
+			<p:outputLabel value="car_024.xhtml"
+				rendered="#{appMain.usuario.idUsuario eq 1}"></p:outputLabel>
+		</f:facet>
+		<h:form id="frm_car_024">
+			<p:growl autoUpdate="true"></p:growl>
+			<div class="ui-fluid">
+				<p:panelGrid id="pnlGrid_02" columns="2"
+					columnClasses="ui-grid-col-12" layout="grid"
+					styleClass="ui-panelgrid-blank">
+					<p:inputText title="Nombre/Identificación " maxlength="20"
+						placeholder="Nombre/Identificación"
+						value="#{BusquedaBn.condicionVendedor}" />
+					<p:commandButton icon="ui-icon-search"
+						update="dtbEjecutivoComercial"
+						action="#{BusquedaBn.buscarEjecutivo()}"></p:commandButton>
+				</p:panelGrid>
+			</div>
+			<p:dataTable id="dtbEjecutivoComercial"
+				value="#{BusquedaBn.vendedores}" var="ejecutivo" paginator="true"
+				rowKey="#{ejecutivo.idVendedor}" reflow="true" styleClass="fullSize"
+				rows="4" selection="#{BusquedaBn.vendedorSeleccionado}"
+				selectionMode="single">
+				<p:ajax event="rowSelect" process="@this dtbEjecutivoComercial"
+					oncomplete="PF('dlg_car_024').hide()" immediate="true"
+					update=":frm_car_rpt_004:inpNombreEjecutivo"></p:ajax>
+				<p:column headerText="Identificación">
+					<p:outputLabel value="#{ejecutivo.persona.identificacionPersona}"></p:outputLabel>
+				</p:column>
+				<p:column headerText="Nombre">
+					<p:outputLabel value="#{ejecutivo.persona.nombreCompleto}"></p:outputLabel>
+				</p:column>
+				<p:column headerText="Correo">
+					<p:outputLabel value="#{ejecutivo.persona.email}"></p:outputLabel>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+	</p:dialog>
+</ui:composition>

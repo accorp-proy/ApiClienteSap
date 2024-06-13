@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="/WEB-INF/template.xhtml">
+	<ui:define name="content">
+		<h:form id="frm_car_011">
+			<p:growl autoUpdate="false" id="msg"></p:growl>
+			<p:panelGrid id="pnl_00" styleClass="fullSize" columns="2"
+				columnClasses="ui-grid-col-2,ui-grid-col-2" layout="grid">
+
+			</p:panelGrid>
+			<div class="ui-g-12 ui-lg-3">
+				<div class="card">
+					<p:panelGrid columns="1" layout="grid" style="width:100%"
+						styleClass="ui-panelgrid-blank form-group">
+						<h:panelGroup>
+							<p:selectOneMenu converter="#{empresaConverter}"
+								value="#{resumenSeguimientoCarteraBn.empresaSeleccionada}"
+								style="width:100%">
+								<f:selectItem itemLabel="Empresa" />
+								<f:selectItems value="#{resumenSeguimientoCarteraBn.empresas}"
+									var="empresa" itemLabel="#{empresa.descripcion}"
+									itemValue="#{empresa}"></f:selectItems>
+								<p:ajax update="frm_car_011:selectOneCompaniaVirtual"
+									process="@this" event="change"></p:ajax>
+							</p:selectOneMenu>
+						</h:panelGroup>
+						<h:panelGroup>
+							<p:selectOneMenu id="selectOneCompaniaVirtual"
+								value="#{resumenSeguimientoCarteraBn.companiaVirtualSeleccionado}"
+								converter="#{productoCarteraCobranzaConverter}"
+								style="width:100%">
+								<f:selectItem itemLabel="Compañia Virtual" />
+								<f:selectItems
+									value="#{resumenSeguimientoCarteraBn.listcompaniaVirtual}"
+									var="companiaVirtual"
+									itemLabel="#{companiaVirtual.descripcion}"
+									itemValue="#{companiaVirtual}">
+								</f:selectItems>
+							</p:selectOneMenu>
+						</h:panelGroup>
+						<h:panelGroup>
+							<p:calendar placeholder="Fecha Corte"
+								value="#{resumenSeguimientoCarteraBn.fechaCorte}"
+								pattern="dd-MM-yyyy" showOn="button"></p:calendar>
+						</h:panelGroup>
+						<h:panelGroup>
+							<div align="right">
+								<p:commandButton icon="ui-icon-reorder"
+									action="#{resumenSeguimientoCarteraBn.generar()}"
+									update="frm_car_011:dtbResumenCartera"></p:commandButton>
+							</div>
+						</h:panelGroup>
+					</p:panelGrid>
+				</div>
+			</div>
+			<div class="ui-g-12 ui-lg-9">
+				<div class="card" style="height: 480px">
+
+					<div class="card card-w-title">
+						<h1>Resumen de Clientes</h1>
+						<p:outputLabel style="font-weight:bold;font-size:15px"
+							value="Fecha Corte: "></p:outputLabel>
+						<p:outputLabel style="font-weight:bold;font-size:15px"
+							value="#{resumenSeguimientoCarteraBn.resumenCarteraGenerado.fechaCorte}">
+							<f:convertDateTime pattern="dd-MM-yyyy" />
+						</p:outputLabel>
+						<br />
+						<p:outputLabel style="font-weight:bold;font-size:15px"
+							value="#{resumenSeguimientoCarteraBn.resumenCarteraGenerado.companiaVirtual.descripcion}"></p:outputLabel>
+						<p:dataTable id="dtbResumenCartera" rows="6"
+							tableStyle="table-layout:auto" paginatorPosition="bottom"
+							style="margin-bottom:10px" reflow="true"
+							value="#{resumenSeguimientoCarteraBn.resumenCarteraVencido}"
+							emptyMessage="Registro no encontrado" var="resumen">
+							<p:column headerText="Descripción Prioridad">
+								<h:outputText
+								value="#{resumen.descripcion} #{resumen.diaVencidoDesde} - #{resumen.diaVencidoHasta} Días"
+								rendered="#{resumen.diaVencidoHasta ne 0}" />
+							<h:outputText
+								value="#{resumen.descripcion} #{resumen.diaVencidoDesde} Días"
+								rendered="#{resumen.diaVencidoHasta eq 0}" />
+							</p:column>
+							<p:column headerText="Cantidad  Clientes">
+								<div align="center">
+									<h:outputText value="#{resumen.cantidad}" />
+								</div>
+							</p:column>
+							<p:column headerText="Valor" style="text-align:center">
+								<h:outputText value=" $ #{resumen.valorTotal}" />
+							</p:column>
+							<p:column headerText="Porcentaje">
+								<div align="center">
+									<p:progressBar
+										labelTemplate="#{resumenSeguimientoCarteraBn.retornaPorcentaje(resumen.cantidad)}%"
+										value="#{resumenSeguimientoCarteraBn.retornaPorcentaje(resumen.cantidad)}" />
+								</div>
+							</p:column>
+							<p:column headerText="Ver">
+								<div align="center">
+									<p:commandButton icon="ui-icon-update" styleClass="secondary"
+										action="#{resumenSeguimientoCarteraBn.vizualizar(resumen)}"
+										update=":frm_car_012" title="Vizualizar Clientes"
+										oncomplete="PF('dlg_car_012').show()"></p:commandButton>
+								</div>
+							</p:column>
+							<p:columnGroup type="footer">
+								<p:row>
+									<p:column style="text-align:left"
+										footerText="Total Corriente: #{resumenSeguimientoCarteraBn.totalCorriente}" />
+									<p:column
+										footerText="#{resumenSeguimientoCarteraBn.totalClientes}" />
+									<p:column
+										footerText="$#{resumenSeguimientoCarteraBn.totalPendiente}" />
+									<p:column />
+									<p:column />
+								</p:row>
+							</p:columnGroup>
+						</p:dataTable>
+					</div>
+				</div>
+			</div>
+		</h:form>
+		<ui:include src="/pages/cartera/car_012.xhtml" />
+	</ui:define>
+</ui:composition>

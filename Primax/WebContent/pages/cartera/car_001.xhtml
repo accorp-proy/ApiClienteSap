@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="/WEB-INF/template.xhtml">
+	<ui:define name="content">
+		<h:form id="frm_car_001">
+			<p:growl autoUpdate="false" id="msg"></p:growl>
+			<p:panelGrid id="pnl_00" styleClass="fullSize" columns="3"
+				columnClasses="ui-grid-col-5,ui-grid-col-5,ui-grid-col-2,"
+				layout="grid">
+				<f:facet name="header">
+					<div align="left">
+						<p:outputLabel value="Cliente "></p:outputLabel>
+						<p:outputLabel value="car_001.xhtml"
+							rendered="#{appMain.usuario.idUsuario eq 1}"></p:outputLabel>
+					</div>
+					<div align="right">
+						<p:inputText id="inpBusqueda" value="#{clienteBn.condicion}"
+							styleClass="w30"
+							placeholder="Identificación /Razón Social /Nombre Alfa"></p:inputText>
+						<p:commandButton title="Buscar" action="#{clienteBn.buscar()}"
+							update="dtbCliente" icon="ui-icon-search" styleClass="secondary"></p:commandButton>
+						
+					</div>
+
+				</f:facet>
+			</p:panelGrid>
+			<p:dataTable id="dtbCliente" tableStyle="table-layout:auto"
+				paginator="true" rows="8" paginatorPosition="bottom"
+				style="margin-bottom:10px" reflow="true"
+				value="#{clienteBn.personas}" emptyMessage="Registro no encontrado"
+				var="persona">
+				<p:column headerText="Identificacion">
+					<h:outputText value="#{persona.identificacionPersona}" />
+				</p:column>
+				<p:column headerText="Razón Social">
+					<h:outputText value="#{persona.nombreCompleto}" />
+				</p:column>
+				<p:column headerText="Nombre Alfa">
+					<h:outputText value="#{persona.nombreComercial}" />
+				</p:column>
+				<p:column headerText="Correo">
+					<h:outputText value="#{persona.email}" />
+				</p:column>
+				<p:column headerText="Provincia">
+					<h:outputText
+						 />
+				</p:column>
+				<p:column headerText="Cantón">
+					<h:outputText  />
+				</p:column>
+				<p:column headerText="Teléfono">
+					<h:outputText value="#{persona.telefonoConvencional}" />
+				</p:column>
+				<p:column headerText="Acción" style="width:60px">
+					<div align="center">
+						
+					</div>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+	</ui:define>
+</ui:composition>
